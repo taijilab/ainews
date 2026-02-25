@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+  <head>
+    <title>AI News Feeds</title>
+  </head>
+  <body>
+    <outline text="Hacker News Frontpage" type="rss" xmlUrl="https://hnrss.org/frontpage" />
+    <outline text="The Batch" type="rss" xmlUrl="https://www.deeplearning.ai/the-batch/feed/" />
+    <outline text="OpenAI Blog" type="rss" xmlUrl="https://openai.com/news/rss.xml" />
+  </body>
+</opml>

@@ -1,0 +1,30 @@
+version: 0.1
+topic_building:
+  priority_order: [entity_exact, entity_alias, semantic_cluster, keyword_cluster]
+
+  entity_rules:
+    create_if_entity_mentioned: true
+    min_confidence: 0.55
+    merge_if_same_canonical: true
+
+  semantic_cluster:
+    enabled: false
+    similarity_threshold: 0.82
+    min_cluster_size: 2
+
+  keyword_cluster:
+    enabled: true
+    min_keyword_overlap: 3
+
+  topic_split_rules:
+    max_time_gap_days: 30
+    split_if_semantic_distance: 0.25
+
+  topic_merge_rules:
+    merge_if_embedding_similarity: 0.9
+    merge_if_same_entity: true
+
+  ranking_priority: [entity_topic, cluster_topic]
+
+  fallback:
+    create_single_post_topic: false

@@ -1,0 +1,836 @@
+{
+  "generated_at_utc": "2026-02-25T09:07:34.541788+00:00",
+  "source_opml": "https://gist.githubusercontent.com/emschwartz/e6d2bf860ccc367fe37ff953ba6de66b/raw/hn-popular-blogs-2025.opml",
+  "total_feeds": 92,
+  "ok_count": 76,
+  "rows": [
+    {
+      "name": "simonwillison.net",
+      "blog_address": "https://simonwillison.net",
+      "rss_url": "https://simonwillison.net/atom/everything/",
+      "topic": "Programming",
+      "weekly_updates": 28,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "daringfireball.net",
+      "blog_address": "https://daringfireball.net",
+      "rss_url": "https://daringfireball.net/feeds/main",
+      "topic": "Programming",
+      "weekly_updates": 21,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "johndcook.com",
+      "blog_address": "https://johndcook.com",
+      "rss_url": "https://www.johndcook.com/blog/feed/",
+      "topic": "AI",
+      "weekly_updates": 8,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "nesbitt.io",
+      "blog_address": "https://nesbitt.io",
+      "rss_url": "https://nesbitt.io/feed.xml",
+      "topic": "AI",
+      "weekly_updates": 7,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "shkspr.mobi",
+      "blog_address": "https://shkspr.mobi",
+      "rss_url": "https://shkspr.mobi/blog/feed/",
+      "topic": "AI",
+      "weekly_updates": 7,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "devblogs.microsoft.com/oldnewthing",
+      "blog_address": "https://devblogs.microsoft.com/oldnewthing",
+      "rss_url": "https://devblogs.microsoft.com/oldnewthing/feed",
+      "topic": "AI",
+      "weekly_updates": 6,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "dfarq.homeip.net",
+      "blog_address": "https://dfarq.homeip.net",
+      "rss_url": "https://dfarq.homeip.net/feed/",
+      "topic": "AI",
+      "weekly_updates": 5,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "joanwestenberg.com",
+      "blog_address": "https://joanwestenberg.com",
+      "rss_url": "https://joanwestenberg.com/rss",
+      "topic": "AI",
+      "weekly_updates": 5,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "idiallo.com",
+      "blog_address": "https://idiallo.com",
+      "rss_url": "https://idiallo.com/feed.rss",
+      "topic": "Programming",
+      "weekly_updates": 4,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "pluralistic.net",
+      "blog_address": "https://pluralistic.net",
+      "rss_url": "https://pluralistic.net/feed/",
+      "topic": "Programming",
+      "weekly_updates": 4,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "blog.jim-nielsen.com",
+      "blog_address": "https://blog.jim-nielsen.com",
+      "rss_url": "https://blog.jim-nielsen.com/feed.xml",
+      "topic": "Programming",
+      "weekly_updates": 3,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "buttondown.com/hillelwayne",
+      "blog_address": "https://buttondown.com/hillelwayne",
+      "rss_url": "https://buttondown.com/hillelwayne/rss",
+      "topic": "Programming",
+      "weekly_updates": 2,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "construction-physics.com",
+      "blog_address": "https://construction-physics.com",
+      "rss_url": "https://www.construction-physics.com/feed",
+      "topic": "AI",
+      "weekly_updates": 2,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "garymarcus.substack.com",
+      "blog_address": "https://garymarcus.substack.com",
+      "rss_url": "https://garymarcus.substack.com/feed",
+      "topic": "AI",
+      "weekly_updates": 2,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "herman.bearblog.dev",
+      "blog_address": "https://herman.bearblog.dev",
+      "rss_url": "https://herman.bearblog.dev/feed/",
+      "topic": "AI",
+      "weekly_updates": 2,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "seangoedecke.com",
+      "blog_address": "https://seangoedecke.com",
+      "rss_url": "https://www.seangoedecke.com/rss.xml",
+      "topic": "AI",
+      "weekly_updates": 2,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "steveblank.com",
+      "blog_address": "https://steveblank.com",
+      "rss_url": "https://steveblank.com/feed/",
+      "topic": "Programming",
+      "weekly_updates": 2,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "xeiaso.net",
+      "blog_address": "https://xeiaso.net",
+      "rss_url": "https://xeiaso.net/blog.rss",
+      "topic": "Programming",
+      "weekly_updates": 2,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "antirez.com",
+      "blog_address": "http://antirez.com",
+      "rss_url": "http://antirez.com/rss",
+      "topic": "AI",
+      "weekly_updates": 1,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "derekthompson.org",
+      "blog_address": "https://derekthompson.org",
+      "rss_url": "https://www.theatlantic.com/feed/author/derek-thompson/",
+      "topic": "AI",
+      "weekly_updates": 1,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "entropicthoughts.com",
+      "blog_address": "https://entropicthoughts.com",
+      "rss_url": "https://entropicthoughts.com/feed.xml",
+      "topic": "General Tech",
+      "weekly_updates": 1,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "ericmigi.com",
+      "blog_address": "https://ericmigi.com",
+      "rss_url": "https://ericmigi.com/rss.xml",
+      "topic": "Programming",
+      "weekly_updates": 1,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "evanhahn.com",
+      "blog_address": "https://evanhahn.com",
+      "rss_url": "https://evanhahn.com/feed.xml",
+      "topic": "Programming",
+      "weekly_updates": 1,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "filfre.net",
+      "blog_address": "https://filfre.net",
+      "rss_url": "https://www.filfre.net/feed/",
+      "topic": "AI",
+      "weekly_updates": 1,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "geohot.github.io",
+      "blog_address": "https://geohot.github.io",
+      "rss_url": "https://geohot.github.io/blog/feed.xml",
+      "topic": "AI",
+      "weekly_updates": 1,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "jeffgeerling.com",
+      "blog_address": "https://jeffgeerling.com",
+      "rss_url": "https://www.jeffgeerling.com/blog.xml",
+      "topic": "AI",
+      "weekly_updates": 1,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "krebsonsecurity.com",
+      "blog_address": "https://krebsonsecurity.com",
+      "rss_url": "https://krebsonsecurity.com/feed/",
+      "topic": "Security",
+      "weekly_updates": 1,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "matklad.github.io",
+      "blog_address": "https://matklad.github.io",
+      "rss_url": "https://matklad.github.io/feed.xml",
+      "topic": "Programming",
+      "weekly_updates": 1,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "maurycyz.com",
+      "blog_address": "https://maurycyz.com",
+      "rss_url": "https://maurycyz.com/index.xml",
+      "topic": "Programming",
+      "weekly_updates": 1,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "susam.net",
+      "blog_address": "https://susam.net",
+      "rss_url": "https://susam.net/feed.xml",
+      "topic": "Programming",
+      "weekly_updates": 1,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "troyhunt.com",
+      "blog_address": "https://troyhunt.com",
+      "rss_url": "https://www.troyhunt.com/rss/",
+      "topic": "AI",
+      "weekly_updates": 1,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "wheresyoured.at",
+      "blog_address": "https://wheresyoured.at",
+      "rss_url": "https://www.wheresyoured.at/rss/",
+      "topic": "AI",
+      "weekly_updates": 1,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "worksonmymachine.substack.com",
+      "blog_address": "https://worksonmymachine.substack.com",
+      "rss_url": "https://worksonmymachine.substack.com/feed",
+      "topic": "AI",
+      "weekly_updates": 1,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "abortretry.fail",
+      "blog_address": "https://abortretry.fail",
+      "rss_url": "https://www.abortretry.fail/feed",
+      "topic": "AI",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "anildash.com",
+      "blog_address": "https://anildash.com",
+      "rss_url": "https://anildash.com/feed.xml",
+      "topic": "General Tech",
+      "weekly_updates": 0,
+      "network_status": "ERROR",
+      "error": "('Connection aborted.', OSError(0, 'Error'))"
+    },
+    {
+      "name": "aresluna.org",
+      "blog_address": "https://aresluna.org",
+      "rss_url": "https://aresluna.org/main.rss",
+      "topic": "General Tech",
+      "weekly_updates": 0,
+      "network_status": "ERROR",
+      "error": "('Connection aborted.', OSError(0, 'Error'))"
+    },
+    {
+      "name": "beej.us",
+      "blog_address": "https://beej.us",
+      "rss_url": "https://beej.us/blog/rss.xml",
+      "topic": "Programming",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "bernsteinbear.com",
+      "blog_address": "https://bernsteinbear.com",
+      "rss_url": "https://bernsteinbear.com/feed.xml",
+      "topic": "Programming",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "berthub.eu",
+      "blog_address": "https://berthub.eu",
+      "rss_url": "https://berthub.eu/articles/index.xml",
+      "topic": "Programming",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "blog.pixelmelt.dev",
+      "blog_address": "https://blog.pixelmelt.dev",
+      "rss_url": "https://blog.pixelmelt.dev/rss/",
+      "topic": "General Tech",
+      "weekly_updates": 0,
+      "network_status": "ERROR",
+      "error": "HTTPSConnectionPool(host='blog.pixelmelt.dev', port=443): Read timed out. (read timeout=20)"
+    },
+    {
+      "name": "bogdanthegeek.github.io",
+      "blog_address": "https://bogdanthegeek.github.io",
+      "rss_url": "https://bogdanthegeek.github.io/blog/index.xml",
+      "topic": "Web/Product",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "borretti.me",
+      "blog_address": "https://borretti.me",
+      "rss_url": "https://borretti.me/feed.xml",
+      "topic": "Infra",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "brutecat.com",
+      "blog_address": "https://brutecat.com",
+      "rss_url": "https://brutecat.com/rss.xml",
+      "topic": "AI",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "chadnauseam.com",
+      "blog_address": "https://chadnauseam.com",
+      "rss_url": "https://chadnauseam.com/rss.xml",
+      "topic": "AI",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "chiark.greenend.org.uk/~sgtatham",
+      "blog_address": "https://chiark.greenend.org.uk/~sgtatham",
+      "rss_url": "https://www.chiark.greenend.org.uk/~sgtatham/quasiblog/feed.xml",
+      "topic": "General Tech",
+      "weekly_updates": 0,
+      "network_status": "ERROR",
+      "error": "('Connection aborted.', OSError(0, 'Error'))"
+    },
+    {
+      "name": "computer.rip",
+      "blog_address": "https://computer.rip",
+      "rss_url": "https://computer.rip/rss.xml",
+      "topic": "General Tech",
+      "weekly_updates": 0,
+      "network_status": "ERROR",
+      "error": "('Connection aborted.', OSError(0, 'Error'))"
+    },
+    {
+      "name": "danielchasehooper.com",
+      "blog_address": "https://danielchasehooper.com",
+      "rss_url": "https://danielchasehooper.com/feed.xml",
+      "topic": "General Tech",
+      "weekly_updates": 0,
+      "network_status": "ERROR",
+      "error": "('Connection aborted.', OSError(0, 'Error'))"
+    },
+    {
+      "name": "danieldelaney.net",
+      "blog_address": "https://danieldelaney.net",
+      "rss_url": "https://danieldelaney.net/feed",
+      "topic": "Programming",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "danielwirtz.com",
+      "blog_address": "https://danielwirtz.com",
+      "rss_url": "https://danielwirtz.com/rss.xml",
+      "topic": "AI",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "downtowndougbrown.com",
+      "blog_address": "https://downtowndougbrown.com",
+      "rss_url": "https://www.downtowndougbrown.com/feed/",
+      "topic": "Programming",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "dwarkesh.com",
+      "blog_address": "https://dwarkesh.com",
+      "rss_url": "https://www.dwarkeshpatel.com/feed",
+      "topic": "AI",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "dynomight.net",
+      "blog_address": "https://dynomight.net",
+      "rss_url": "https://dynomight.net/feed.xml",
+      "topic": "AI",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "eli.thegreenplace.net",
+      "blog_address": "https://eli.thegreenplace.net",
+      "rss_url": "https://eli.thegreenplace.net/feeds/all.atom.xml",
+      "topic": "Programming",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "experimental-history.com",
+      "blog_address": "https://experimental-history.com",
+      "rss_url": "https://www.experimental-history.com/feed",
+      "topic": "General Tech",
+      "weekly_updates": 0,
+      "network_status": "ERROR",
+      "error": "('Connection aborted.', OSError(0, 'Error'))"
+    },
+    {
+      "name": "fabiensanglard.net",
+      "blog_address": "https://fabiensanglard.net",
+      "rss_url": "https://fabiensanglard.net/rss.xml",
+      "topic": "General Tech",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "geoffreylitt.com",
+      "blog_address": "https://geoffreylitt.com",
+      "rss_url": "https://www.geoffreylitt.com/feed.xml",
+      "topic": "AI",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "gilesthomas.com",
+      "blog_address": "https://gilesthomas.com",
+      "rss_url": "https://gilesthomas.com/feed/rss.xml",
+      "topic": "AI",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "grantslatton.com",
+      "blog_address": "https://grantslatton.com",
+      "rss_url": "https://grantslatton.com/rss.xml",
+      "topic": "General Tech",
+      "weekly_updates": 0,
+      "network_status": "ERROR",
+      "error": "('Connection aborted.', OSError(0, 'Error'))"
+    },
+    {
+      "name": "gwern.net",
+      "blog_address": "https://gwern.net",
+      "rss_url": "https://gwern.substack.com/feed",
+      "topic": "AI",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "hey.paris",
+      "blog_address": "https://hey.paris",
+      "rss_url": "https://hey.paris/index.xml",
+      "topic": "AI",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "hugotunius.se",
+      "blog_address": "https://hugotunius.se",
+      "rss_url": "https://hugotunius.se/feed.xml",
+      "topic": "Programming",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "it-notes.dragas.net",
+      "blog_address": "https://it-notes.dragas.net",
+      "rss_url": "https://it-notes.dragas.net/feed/",
+      "topic": "Web/Product",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "jayd.ml",
+      "blog_address": "https://jayd.ml",
+      "rss_url": "https://jayd.ml/feed.xml",
+      "topic": "Programming",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "jyn.dev",
+      "blog_address": "https://jyn.dev",
+      "rss_url": "https://jyn.dev/atom.xml",
+      "topic": "Programming",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "keygen.sh",
+      "blog_address": "https://keygen.sh",
+      "rss_url": "https://keygen.sh/blog/feed.xml",
+      "topic": "General Tech",
+      "weekly_updates": 0,
+      "network_status": "ERROR",
+      "error": "('Connection aborted.', OSError(0, 'Error'))"
+    },
+    {
+      "name": "lcamtuf.substack.com",
+      "blog_address": "https://lcamtuf.substack.com",
+      "rss_url": "https://lcamtuf.substack.com/feed",
+      "topic": "AI",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "lucumr.pocoo.org",
+      "blog_address": "https://lucumr.pocoo.org",
+      "rss_url": "https://lucumr.pocoo.org/feed.atom",
+      "topic": "Programming",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "martinalderson.com",
+      "blog_address": "https://martinalderson.com",
+      "rss_url": "https://martinalderson.com/feed.xml",
+      "topic": "General Tech",
+      "weekly_updates": 0,
+      "network_status": "ERROR",
+      "error": "('Connection aborted.', OSError(0, 'Error'))"
+    },
+    {
+      "name": "matduggan.com",
+      "blog_address": "https://matduggan.com",
+      "rss_url": "https://matduggan.com/rss/",
+      "topic": "AI",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "micahflee.com",
+      "blog_address": "https://micahflee.com",
+      "rss_url": "https://micahflee.com/feed/",
+      "topic": "AI",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "michael.stapelberg.ch",
+      "blog_address": "https://michael.stapelberg.ch",
+      "rss_url": "https://michael.stapelberg.ch/feed.xml",
+      "topic": "General Tech",
+      "weekly_updates": 0,
+      "network_status": "ERROR",
+      "error": "('Connection aborted.', OSError(0, 'Error'))"
+    },
+    {
+      "name": "miguelgrinberg.com",
+      "blog_address": "https://miguelgrinberg.com",
+      "rss_url": "https://blog.miguelgrinberg.com/feed",
+      "topic": "General Tech",
+      "weekly_updates": 0,
+      "network_status": "ERROR",
+      "error": "('Connection aborted.', OSError(0, 'Error'))"
+    },
+    {
+      "name": "minimaxir.com",
+      "blog_address": "https://minimaxir.com",
+      "rss_url": "https://minimaxir.com/index.xml",
+      "topic": "AI",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "mitchellh.com",
+      "blog_address": "https://mitchellh.com",
+      "rss_url": "https://mitchellh.com/feed.xml",
+      "topic": "AI",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "mjg59.dreamwidth.org",
+      "blog_address": "https://mjg59.dreamwidth.org",
+      "rss_url": "https://mjg59.dreamwidth.org/data/rss",
+      "topic": "General Tech",
+      "weekly_updates": 0,
+      "network_status": "ERROR",
+      "error": "('Connection aborted.', OSError(0, 'Error'))"
+    },
+    {
+      "name": "oldvcr.blogspot.com",
+      "blog_address": "https://oldvcr.blogspot.com",
+      "rss_url": "https://oldvcr.blogspot.com/feeds/posts/default",
+      "topic": "Programming",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "overreacted.io",
+      "blog_address": "https://overreacted.io",
+      "rss_url": "https://overreacted.io/rss.xml",
+      "topic": "Programming",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "paulgraham.com",
+      "blog_address": "https://paulgraham.com",
+      "rss_url": "http://www.aaronsw.com/2002/feeds/pgessays.rss",
+      "topic": "General Tech",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "philiplaine.com",
+      "blog_address": "https://philiplaine.com",
+      "rss_url": "https://philiplaine.com/index.xml",
+      "topic": "Infra",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "rachelbythebay.com",
+      "blog_address": "https://rachelbythebay.com",
+      "rss_url": "https://rachelbythebay.com/w/atom.xml",
+      "topic": "General Tech",
+      "weekly_updates": 0,
+      "network_status": "ERROR",
+      "error": "HTTPSConnectionPool(host='rachelbythebay.com', port=443): Read timed out. (read timeout=20)"
+    },
+    {
+      "name": "rakhim.exotext.com",
+      "blog_address": "https://rakhim.exotext.com",
+      "rss_url": "https://rakhim.exotext.com/rss.xml",
+      "topic": "Programming",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "refactoringenglish.com",
+      "blog_address": "https://refactoringenglish.com",
+      "rss_url": "https://refactoringenglish.com/index.xml",
+      "topic": "Programming",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "righto.com",
+      "blog_address": "https://righto.com",
+      "rss_url": "https://www.righto.com/feeds/posts/default",
+      "topic": "Programming",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "simone.org",
+      "blog_address": "https://simone.org",
+      "rss_url": "https://simone.org/feed/",
+      "topic": "Web/Product",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "skyfall.dev",
+      "blog_address": "https://skyfall.dev",
+      "rss_url": "https://skyfall.dev/rss.xml",
+      "topic": "AI",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "tedium.co",
+      "blog_address": "https://tedium.co",
+      "rss_url": "https://feed.tedium.co/",
+      "topic": "Programming",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "tedunangst.com",
+      "blog_address": "https://tedunangst.com",
+      "rss_url": "https://www.tedunangst.com/flak/rss",
+      "topic": "General Tech",
+      "weekly_updates": 0,
+      "network_status": "ERROR",
+      "error": "('Connection aborted.', OSError(0, 'Error'))"
+    },
+    {
+      "name": "terriblesoftware.org",
+      "blog_address": "https://terriblesoftware.org",
+      "rss_url": "https://terriblesoftware.org/feed/",
+      "topic": "Programming",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "timsh.org",
+      "blog_address": "https://timsh.org",
+      "rss_url": "https://timsh.org/rss/",
+      "topic": "AI",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "tomrenner.com",
+      "blog_address": "https://tomrenner.com",
+      "rss_url": "https://tomrenner.com/index.xml",
+      "topic": "Security",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    },
+    {
+      "name": "utcc.utoronto.ca/~cks",
+      "blog_address": "https://utcc.utoronto.ca/~cks",
+      "rss_url": "https://utcc.utoronto.ca/~cks/space/blog/?atom",
+      "topic": "General Tech",
+      "weekly_updates": 0,
+      "network_status": "ERROR",
+      "error": "HTTPSConnectionPool(host='utcc.utoronto.ca', port=443): Read timed out. (read timeout=20)"
+    },
+    {
+      "name": "xania.org",
+      "blog_address": "https://xania.org",
+      "rss_url": "https://xania.org/feed",
+      "topic": "AI",
+      "weekly_updates": 0,
+      "network_status": "OK",
+      "error": ""
+    }
+  ]
+}

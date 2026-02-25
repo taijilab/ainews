@@ -1,0 +1,31 @@
+version: 0.1
+entities:
+  - id: ent.vllm
+    canonical: vLLM
+    type: Product
+    aliases: [vllm, vLLM, paged attention, PagedAttention]
+    trigger_keywords: [vllm, paged attention]
+
+  - id: ent.mcp
+    canonical: Model Context Protocol
+    type: Protocol
+    aliases: [mcp, model context protocol]
+    trigger_keywords: [mcp, model context protocol]
+
+  - id: ent.sglang
+    canonical: SGLang
+    type: Product
+    aliases: [sglang, sg-lang, sg lang]
+    trigger_keywords: [sglang]
+
+  - id: ent.postgres
+    canonical: PostgreSQL
+    type: Database
+    aliases: [postgres, postgresql, pg]
+    trigger_keywords: [postgres, postgresql]
+
+  - id: ent.tensorrt_llm
+    canonical: TensorRT-LLM
+    type: Product
+    aliases: [tensorrt-llm, tensorrt llm]
+    trigger_keywords: [tensorrt-llm]

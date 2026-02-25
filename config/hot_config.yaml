@@ -1,0 +1,35 @@
+version: 0.1
+windows:
+  - name: 24h
+    hours: 24
+  - name: 7d
+    hours: 168
+  - name: 30d
+    hours: 720
+
+hot_score:
+  weights:
+    D_diversity: 0.35
+    Q_volume: 0.25
+    V_velocity: 0.25
+    R_recency: 0.15
+
+  caps:
+    M_blogs: 8
+    M_posts: 15
+
+  velocity:
+    max_ratio: 2.0
+    epsilon: 1
+
+  recency:
+    tau_hours: 36
+
+cross_blogger_hot:
+  rules:
+    - window: 24h
+      min_blogs: 2
+      min_posts: 3
+    - window: 7d
+      min_blogs: 4
+      min_posts: 8

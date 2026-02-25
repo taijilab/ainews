@@ -1,0 +1,66 @@
+version: 0.1
+scoring:
+  boost:
+    strong: 1.2
+    medium: 0.6
+    weak: 0.3
+  thresholds:
+    primary_label_min: 0.55
+    secondary_label_min: 0.40
+
+labels:
+  - id: AI.LLM
+    name: AI / LLM & Reasoning
+    parent: AI
+    keywords_strong: [mmlu, gsm8k, reasoning, rlhf, alignment]
+    keywords_medium: [prompt, eval, benchmark, hallucination, safety]
+    keywords_weak: [llm, model, transformer]
+
+  - id: AI.AGENT
+    name: AI / Agent & Tool Use
+    parent: AI
+    keywords_strong: [mcp, model context protocol, tool calling, function calling, langgraph]
+    keywords_medium: [workflow, orchestration, planner, executor, reflection]
+    keywords_weak: [agent, agents, automation]
+
+  - id: AI.RAG
+    name: AI / RAG & Search
+    parent: AI
+    keywords_strong: [rag, retrieval augmented generation, reranker, hybrid search]
+    keywords_medium: [vector database, embedding, retriever, chunking]
+    keywords_weak: [search, retrieval]
+
+  - id: AI.SERVING
+    name: AI / Serving & Inference
+    parent: AI
+    keywords_strong: [vllm, sglang, tensorrt-llm, triton, llama.cpp, gguf]
+    keywords_medium: [kv cache, paged attention, speculative decoding, quantization, flashattention]
+    keywords_weak: [inference, serving, deploy, latency, throughput]
+
+  - id: SYS.K8S
+    name: System / Cloud & K8s
+    parent: System
+    keywords_strong: [kubernetes, k8s, helm, istio, envoy]
+    keywords_medium: [ingress, service mesh, containerd, cni, sidecar]
+    keywords_weak: [container, cloud, cluster]
+
+  - id: DATA.DB
+    name: Data / Database
+    parent: Data
+    keywords_strong: [postgresql, postgres, mysql, clickhouse, duckdb, redis]
+    keywords_medium: [olap, index, query planner, mvcc, replication]
+    keywords_weak: [database, sql, storage]
+
+  - id: SEC.CVE
+    name: Security / Vulnerability & CVE
+    parent: Security
+    keywords_strong: [cve-, zero-day, rce, sandbox escape]
+    keywords_medium: [xss, sqli, csrf, exploit, poc]
+    keywords_weak: [security, vulnerability]
+
+  - id: PROG.RUST
+    name: Programming / Rust
+    parent: Programming
+    keywords_strong: [borrow checker, cargo, tokio, wasm]
+    keywords_medium: [lifetime, trait, async, serde]
+    keywords_weak: [rust]

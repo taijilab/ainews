@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI 资讯时间表</title>
+    <style>
+      :root {
+        --bg: #f5f1e8;
+        --bg-card: #fffdfa;
+        --ink: #1f2a37;
+        --muted: #51606f;
+        --line: #dccfb8;
+        --accent: #b5522e;
+        --accent-soft: #f3d3c6;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Avenir Next", "Manrope", "IBM Plex Sans", "PingFang SC", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 10% 10%, #f8dfcf 0%, transparent 40%),
+          radial-gradient(circle at 90% 20%, #d8e6ef 0%, transparent 34%),
+          var(--bg);
+      }
+
+      .page {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 28px 20px 42px;
+      }
+
+      .hero {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(28px, 5vw, 46px);
+        letter-spacing: 0.02em;
+        font-weight: 800;
+      }
+
+      .sub {
+        color: var(--muted);
+        margin-top: 6px;
+        font-size: 14px;
+      }
+
+      .panel {
+        border: 1px solid var(--line);
+        background: var(--bg-card);
+        border-radius: 16px;
+        box-shadow: 0 12px 28px rgba(36, 26, 17, 0.08);
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 290px 1fr;
+        gap: 16px;
+      }
+
+      .timeline {
+        padding: 14px;
+        max-height: calc(100vh - 180px);
+        overflow-y: auto;
+      }
+
+      .timeline-title {
+        margin: 6px 6px 14px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .day-btn {
+        width: 100%;
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--ink);
+        padding: 10px 12px;
+        border-radius: 12px;
+        margin-bottom: 8px;
+        text-align: left;
+        cursor: pointer;
+        transition: transform 0.16s ease, background 0.16s ease;
+      }
+
+      .day-btn:hover {
+        transform: translateY(-1px);
+        background: #fffaf4;
+      }
+
+      .day-btn.active {
+        border-color: var(--accent);
+        background: var(--accent-soft);
+      }
+
+      .day-main {
+        font-weight: 700;
+        display: block;
+      }
+
+      .day-sub {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .content {
+        padding: 16px;
+        display: grid;
+        gap: 14px;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(120px, 1fr));
+        gap: 10px;
+      }
+
+      .stat-card {
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        background: #fff;
+      }
+
+      .stat-label {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .stat-value {
+        margin-top: 8px;
+        font-size: 24px;
+        font-weight: 800;
+      }
+
+      .card {
+        border: 1px solid var(--line);
+        background: #fff;
+        border-radius: 12px;
+        padding: 14px;
+      }
+
+      .card-title {
+        margin: 0 0 10px;
+        font-size: 16px;
+      }
+
+      .open-source {
+        border: 1px solid var(--line);
+        background: #fff3e7;
+        color: var(--ink);
+        border-radius: 10px;
+        padding: 10px 14px;
+        text-decoration: none;
+        font-size: 14px;
+      }
+
+      .open-source:hover {
+        background: #ffe6cf;
+      }
+
+      .topic-list, .post-list {
+        display: grid;
+        gap: 8px;
+      }
+      
+      .topic-item {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 10px;
+        background: #fffdf9;
+      }
+
+      .topic-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        font-size: 14px;
+      }
+
+      .topic-name {
+        font-weight: 700;
+      }
+
+      .topic-meta {
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      .post-item {
+        border-bottom: 1px dashed var(--line);
+        padding-bottom: 10px;
+      }
+
+      .post-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+
+      .post-title {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.45;
+      }
+
+      .post-title a {
+        color: var(--ink);
+        text-decoration: none;
+      }
+
+      .post-title a:hover {
+        color: var(--accent);
+      }
+
+      .post-meta {
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .pill {
+        display: inline-block;
+        margin-top: 6px;
+        padding: 2px 8px;
+        font-size: 12px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: #f9f5ee;
+      }
+
+      .empty {
+        color: var(--muted);
+        padding: 12px;
+      }
+
+      .zh-title {
+        margin: 0 0 4px;
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      .en-title-label {
+        margin-top: 3px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .summary {
+        margin-top: 6px;
+        font-size: 13px;
+        color: #3f4d5a;
+        line-height: 1.5;
+      }
+
+      .tag-row {
+        margin-top: 6px;
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      @media (max-width: 980px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+
+        .timeline {
+          max-height: none;
+        }
+
+        .stats {
+          grid-template-columns: repeat(2, minmax(120px, 1fr));
+        }
+
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="hero">
+        <div>
+          <h1>AI 资讯日报时间表</h1>
+          <div class="sub" id="subtitle">按日期查看每天的新闻资讯、热点话题与来源覆盖</div>
+        </div>
+        <a class="open-source" href="/sources" target="_blank" rel="noopener noreferrer">数据源管理（新窗口）</a>
+      </div>
+
+      <div class="layout">
+        <aside class="panel timeline" id="timeline"></aside>
+
+        <main class="panel content">
+          <section class="stats" id="stats"></section>
+
+          <section class="card">
+            <h2 class="card-title">当日话题</h2>
+            <div class="topic-list" id="topics"></div>
+          </section>
+
+          <section class="card">
+            <h2 class="card-title">当日文章</h2>
+            <div class="post-list" id="posts"></div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      const state = {
+        dates: [],
+        selectedDay: null,
+        sources: [],
+      };
+
+      const timelineEl = document.getElementById('timeline');
+      const statsEl = document.getElementById('stats');
+      const topicsEl = document.getElementById('topics');
+      const postsEl = document.getElementById('posts');
+      const subtitleEl = document.getElementById('subtitle');
+
+      function fmtDate(day) {
+        const d = new Date(day + 'T00:00:00Z');
+        return d.toLocaleDateString('zh-CN', { month: 'long', day: 'numeric', weekday: 'short' });
+      }
+
+      function esc(text) {
+        return (text || '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+      }
+
+      function renderTimeline() {
+        if (!state.dates.length) {
+          timelineEl.innerHTML = '<div class="timeline-title">时间轴</div><div class="empty">暂无数据</div>';
+          return;
+        }
+
+        const items = state.dates.map((item) => {
+          const active = item.day === state.selectedDay ? 'active' : '';
+          return `
+            <button class="day-btn ${active}" data-day="${item.day}">
+              <span class="day-main">${fmtDate(item.day)}</span>
+              <span class="day-sub">${item.day} · ${item.post_count} 篇</span>
+            </button>
+          `;
+        }).join('');
+
+        timelineEl.innerHTML = `<div class="timeline-title">时间轴（最新在上）</div>${items}`;
+
+        timelineEl.querySelectorAll('.day-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const day = btn.getAttribute('data-day');
+            if (day && day !== state.selectedDay) {
+              state.selectedDay = day;
+              renderTimeline();
+              loadDaily(day);
+            }
+          });
+        });
+      }
+
+      function renderStats(daily) {
+        const stats = daily.stats || { post_count: 0, blog_count: 0 };
+        const topicCount = (daily.topics || []).length;
+
+        statsEl.innerHTML = `
+          <div class="stat-card"><div class="stat-label">日期</div><div class="stat-value">${esc(daily.day || '-')}</div></div>
+          <div class="stat-card"><div class="stat-label">文章数</div><div class="stat-value">${stats.post_count || 0}</div></div>
+          <div class="stat-card"><div class="stat-label">博主覆盖</div><div class="stat-value">${stats.blog_count || 0}</div></div>
+          <div class="stat-card"><div class="stat-label">话题数</div><div class="stat-value">${topicCount}</div></div>
+        `;
+      }
+
+      function renderTopics(topics) {
+        if (!topics || !topics.length) {
+          topicsEl.innerHTML = '<div class="empty">当天没有话题数据</div>';
+          return;
+        }
+        topicsEl.innerHTML = topics.map((t) => `
+          <div class="topic-item">
+            <div class="topic-head">
+              <span class="topic-name">${esc(t.title)}</span>
+              <span class="topic-meta">${t.post_count} 篇 / ${t.blog_count} 博主</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function renderPosts(posts) {
+        if (!posts || !posts.length) {
+          postsEl.innerHTML = '<div class="empty">当天没有文章</div>';
+          return;
+        }
+        postsEl.innerHTML = posts.map((p) => `
+          <article class="post-item">
+            <h3 class="zh-title">中文标题：${esc(p.zh_title || p.title || '')}</h3>
+            <div class="en-title-label">English Title</div>
+            <h3 class="post-title"><a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">${esc(p.title)}</a></h3>
+            <div class="post-meta">${esc(p.blog_id || '')} · ${esc((p.published_at || '').replace('T', ' ').slice(0, 16))}</div>
+            ${p.zh_summary ? `<div class="summary">${esc(p.zh_summary)}</div>` : ''}
+            <div class="tag-row">
+            ${p.primary_label ? `<span class="pill">${esc(p.primary_label)}</span>` : ''}
+            ${(p.topics || []).slice(0, 4).map((t) => `<span class="pill">Topic: ${esc(t)}</span>`).join('')}
+            ${(p.labels || []).slice(0, 4).map((t) => `<span class="pill">Tag: ${esc(t)}</span>`).join('')}
+            </div>
+          </article>
+        `).join('');
+      }
+
+      async function loadDaily(day) {
+        const resp = await fetch(`/api/daily?day=${encodeURIComponent(day)}`);
+        const daily = await resp.json();
+        subtitleEl.textContent = `${day}：${daily.stats.post_count || 0} 篇文章，${daily.stats.blog_count || 0} 个来源`; 
+        renderStats(daily);
+        renderTopics(daily.topics || []);
+        renderPosts(daily.posts || []);
+      }
+
+      async function boot() {
+        const resp = await fetch('/api/dates?limit=120');
+        const dates = await resp.json();
+        state.dates = dates;
+        state.selectedDay = dates[0]?.day || null;
+        renderTimeline();
+
+        if (state.selectedDay) {
+          await loadDaily(state.selectedDay);
+        } else {
+          renderStats({ day: '-', stats: { post_count: 0, blog_count: 0 }, topics: [] });
+          renderTopics([]);
+          renderPosts([]);
+        }
+      }
+
+      boot();
+    </script>
+  </body>
+</html>
