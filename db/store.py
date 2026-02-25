@@ -144,6 +144,26 @@ class Store:
         with self.connect() as conn:
             return conn.execute("SELECT * FROM feeds WHERE id=?", (feed_id,)).fetchone()
 
+    def post_count(self) -> int:
+        with self.connect() as conn:
+            row = conn.execute("SELECT COUNT(*) AS cnt FROM posts").fetchone()
+            return int(row["cnt"]) if row else 0
+
+    def list_feeds(self, limit: int = 20) -> list[sqlite3.Row]:
+        with self.connect() as conn:
+            return conn.execute(
+                """
+                SELECT id, feed_url, title, site_url, error_count
+                FROM feeds
+                ORDER BY
+                  CASE WHEN COALESCE(source_status, '') = 'OK' THEN 0 ELSE 1 END,
+                  error_count ASC,
+                  id ASC
+                LIMIT ?
+                """,
+                (limit,),
+            ).fetchall()
+
     def upsert_feed(self, feed_url: str, title: str = "", site_url: str = "") -> int:
         with self.connect() as conn:
             conn.execute(

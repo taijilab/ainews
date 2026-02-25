@@ -15,7 +15,12 @@ from fastapi.staticfiles import StaticFiles
 import requests
 
 from db.store import Store
+from db.store import PostRecord
 from crawler.fetcher import fetch_feed
+from processor.cleaner import canonicalize_url, normalize_text, stable_hash
+from nlp.classifier import RuleClassifier
+from nlp.entity_extractor import EntityExtractor
+from topic_engine.topic_builder import TopicBuilder
 
 
 def _is_serverless() -> bool:
@@ -100,6 +105,105 @@ def _ensure_sources_seeded() -> None:
             import_sources_from_gist({"probe": False})
     except Exception:
         pass
+
+
+_post_bootstrap_attempted = False
+_classifier = None
+_entity_extractor = None
+_topic_builder = None
+
+
+def _ensure_nlp_components() -> None:
+    global _classifier, _entity_extractor, _topic_builder
+    if _classifier and _entity_extractor and _topic_builder:
+        return
+    base_dir = Path(__file__).resolve().parents[1]
+    cfg_dir = base_dir / "config"
+    _classifier = RuleClassifier(str(cfg_dir / "taxonomy.yaml"))
+    _entity_extractor = EntityExtractor(str(cfg_dir / "entities.yaml"))
+    _topic_builder = TopicBuilder(str(cfg_dir / "topic_builder.yaml"))
+
+
+def _bootstrap_posts_if_empty() -> None:
+    global _post_bootstrap_attempted
+    if store.post_count() > 0:
+        return
+    if _post_bootstrap_attempted:
+        return
+    _post_bootstrap_attempted = True
+
+    _ensure_sources_seeded()
+    feeds = store.list_feeds(limit=10)
+    if not feeds:
+        return
+
+    inserted_ids: list[int] = []
+    for f in feeds:
+        feed_id = int(f["id"])
+        feed_url = str(f["feed_url"])
+        ok = True
+        try:
+            meta, entries = fetch_feed(feed_url, timeout=8)
+            store.upsert_feed(
+                feed_url=feed_url,
+                title=meta.get("feed_title", str(f["title"] or "")),
+                site_url=meta.get("site_url", str(f["site_url"] or "")),
+            )
+            posts: list[PostRecord] = []
+            for e in entries[:25]:
+                canon_url = canonicalize_url(e.url)
+                title_norm = normalize_text(e.title)
+                content_hash = stable_hash(title_norm, normalize_text(e.summary), normalize_text(e.content))
+                posts.append(
+                    PostRecord(
+                        feed_id=feed_id,
+                        blog_id=e.blog_id,
+                        guid=e.guid,
+                        title=e.title,
+                        url=e.url,
+                        canonical_url=canon_url,
+                        author=e.author,
+                        published_at=e.published_at,
+                        summary=e.summary,
+                        content=e.content,
+                        title_norm=title_norm,
+                        content_hash=content_hash,
+                    )
+                )
+            inserted_ids.extend(store.insert_posts(posts))
+        except Exception:
+            ok = False
+        store.mark_feed_fetch(feed_id, ok)
+
+    if not inserted_ids:
+        return
+
+    _ensure_nlp_components()
+    placeholders = ",".join("?" for _ in inserted_ids)
+    with store.connect() as conn:
+        rows = conn.execute(
+            f"""
+            SELECT id, title, summary, content
+            FROM posts
+            WHERE id IN ({placeholders})
+            """,
+            inserted_ids,
+        ).fetchall()
+
+    for row in rows:
+        post_id = int(row["id"])
+        text = "\n".join([row["title"] or "", row["summary"] or "", row["content"] or ""])
+        labels = _classifier.classify(text) if _classifier else []
+        entities = _entity_extractor.extract(text) if _entity_extractor else []
+        store.add_labels(post_id, labels)
+        store.add_entities(post_id, entities)
+        keywords = set(normalize_text(text).split())
+        topic_id, evidence = _topic_builder.assign_topic(entities, labels, keywords) if _topic_builder else (None, {})
+        if topic_id:
+            title = entities[0]["canonical"] if entities else (row["title"] or "Topic")
+            primary_entity = entities[0]["id"] if entities else None
+            store.upsert_topic(topic_id, "ENTITY" if entities else "CLUSTER", title, primary_entity)
+            store.bind_post_topic(topic_id, post_id, 1.0, evidence)
 
 
 def _to_cn_text(text: str, limit: int = 220) -> str:
@@ -190,11 +294,13 @@ def get_entities(q: str = Query(..., min_length=1)) -> List[Dict]:
 
 @app.get("/api/dates")
 def get_available_dates(limit: int = Query(90, ge=1, le=365)) -> List[Dict]:
+    _bootstrap_posts_if_empty()
     return [dict(r) for r in store.api_available_dates(limit=limit)]
 
 
 @app.get("/api/daily")
 def get_daily(day: str = Query(..., pattern=r"^\d{4}-\d{2}-\d{2}$")) -> Dict:
+    _bootstrap_posts_if_empty()
     digest = store.api_daily_digest(day)
     posts = []
     for p in digest.get("posts", []):
