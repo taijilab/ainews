@@ -20,6 +20,7 @@
       .pill { border:1px solid var(--line); background:#f8f2e8; border-radius:999px; padding:2px 8px; font-size:12px; }
       a.pill { color: var(--ink); text-decoration: none; }
       .summary { margin-top:14px; font-size:15px; line-height:1.75; }
+      .warn { margin-top:10px; border:1px solid #e2c9ad; background:#fff7ed; color:#7f4c26; border-radius:10px; padding:8px 10px; font-size:13px; }
       .grid { margin-top:12px; display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
       .pane { border:1px solid var(--line); border-radius:10px; padding:12px; background:#fff; }
       .pane h3 { margin:0 0 8px; font-size:14px; color:var(--muted); }
@@ -40,6 +41,7 @@
           <a id="sourceLink" class="btn" target="_blank" rel="noopener noreferrer">打开原文</a>
         </div>
         <div class="tags" id="tags"></div>
+        <div class="warn" id="warn" style="display:none;"></div>
         <div class="summary" id="summary"></div>
         <div id="contentArea"></div>
       </div>
@@ -56,6 +58,7 @@
       const metaEl = document.getElementById('meta');
       const tagsEl = document.getElementById('tags');
       const summaryEl = document.getElementById('summary');
+      const warnEl = document.getElementById('warn');
       const contentAreaEl = document.getElementById('contentArea');
       const sourceLinkEl = document.getElementById('sourceLink');
       const modeZhEl = document.getElementById('modeZh');
@@ -72,6 +75,13 @@
         metaEl.textContent = `${post.blog_id || ''} · ${(post.published_at || '').replace('T',' ').slice(0,16)}`;
         summaryEl.textContent = post.zh_summary || '';
         sourceLinkEl.href = post.url || '#';
+        if (!post.fulltext_available) {
+          warnEl.style.display = 'block';
+          warnEl.textContent = '当前仅显示 RSS 摘要。源站限制了全文抓取（如 403/反爬）。请点击“打开原文”查看完整内容。';
+        } else {
+          warnEl.style.display = 'none';
+          warnEl.textContent = '';
+        }
 
         const topicTags = (post.topics || []).slice(0,8).map((x) =>
           `<a class="pill" target="_blank" rel="noopener noreferrer" href="/browse?kind=topic&value=${encodeURIComponent(x)}">Topic: ${esc(x)}</a>`

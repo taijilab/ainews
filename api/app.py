@@ -54,6 +54,7 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 _ZH_RE = re.compile(r"[\u4e00-\u9fff]")
 _HTML_TAG_RE = re.compile(r"<[^>]+>")
 _BLOCK_BREAK_RE = re.compile(r"</?(p|div|article|section|h1|h2|h3|h4|h5|h6|li|ul|ol|blockquote|pre|br)[^>]*>", re.IGNORECASE)
+_SCRIPT_STYLE_RE = re.compile(r"<(script|style|noscript)[^>]*>.*?</\\1>", re.IGNORECASE | re.DOTALL)
 
 
 def _seed_sources_from_snapshot(path: str = "data/gist_sources_weekly.json") -> int:
@@ -279,7 +280,38 @@ def _extract_paragraphs(text: str, max_paragraphs: int = 120) -> List[str]:
     return raw_parts[:max_paragraphs]
 
 
-def _translate_long_to_zh(text: str, max_chars: int = 6000) -> str:
+@lru_cache(maxsize=512)
+def _fetch_article_text(url: str) -> str:
+    if not url:
+        return ""
+    try:
+        resp = requests.get(
+            url,
+            timeout=6,
+            headers={"User-Agent": "ainews-bot/0.1 (+read-fulltext)"},
+            allow_redirects=True,
+        )
+        resp.raise_for_status()
+        html = resp.text or ""
+    except Exception:
+        return ""
+
+    # Remove non-content blocks first.
+    html = _SCRIPT_STYLE_RE.sub(" ", html)
+    # Prefer article/main section if available.
+    m = re.search(r"<article[^>]*>(.*?)</article>", html, re.IGNORECASE | re.DOTALL)
+    if not m:
+        m = re.search(r"<main[^>]*>(.*?)</main>", html, re.IGNORECASE | re.DOTALL)
+    body = m.group(1) if m else html
+
+    # Convert block tags to paragraph breaks then strip tags.
+    body = _BLOCK_BREAK_RE.sub("\n\n", body)
+    body = _HTML_TAG_RE.sub(" ", body)
+    body = re.sub(r"\s+", " ", body).strip()
+    return body
+
+
+def _translate_long_to_zh(text: str, max_chars: int = 20000) -> str:
     clean = _HTML_TAG_RE.sub(" ", text or "")
     clean = re.sub(r"\s+", " ", clean).strip()
     if not clean:
@@ -293,7 +325,7 @@ def _translate_long_to_zh(text: str, max_chars: int = 6000) -> str:
     return "\n".join(x for x in out if x).strip()
 
 
-def _translate_paragraphs(paragraphs: List[str], max_paragraph_chars: int = 1000) -> List[Dict[str, str]]:
+def _translate_paragraphs(paragraphs: List[str], max_paragraph_chars: int = 1400) -> List[Dict[str, str]]:
     out: List[Dict[str, str]] = []
     for p in paragraphs:
         en = (p or "").strip()
@@ -415,14 +447,27 @@ def api_post_detail(post_id: int) -> Dict:
     item["topics"] = [x for x in (item.get("topic_tags") or "").split(",") if x]
     item["zh_title"] = _translate_to_zh(item.get("title", ""), limit=120)
     item["zh_summary"] = _translate_to_zh(item.get("summary", ""), limit=320)
-    content = item.get("content") or item.get("summary") or ""
-    paragraphs = _extract_paragraphs(content, max_paragraphs=120)
+    content = item.get("content") or ""
+    source_type = "rss_content" if content else "rss_summary"
+    if len((content or "").strip()) < 500:
+        # RSS feeds often provide only summaries. Fetch full article on demand.
+        fetched = _fetch_article_text(item.get("url") or "")
+        if len(fetched) > len(content or ""):
+            content = fetched
+            source_type = "fetched_fulltext"
+    if not content:
+        content = item.get("summary") or ""
+        source_type = "rss_summary"
+
+    paragraphs = _extract_paragraphs(content, max_paragraphs=220)
     if not paragraphs:
         paragraphs = _extract_paragraphs(item.get("summary") or "", max_paragraphs=20)
     para_pairs = _translate_paragraphs(paragraphs)
     item["paragraphs"] = para_pairs
     item["content_en"] = "\n\n".join(x["en"] for x in para_pairs)
     item["content_zh"] = "\n\n".join(x["zh"] for x in para_pairs)
+    item["content_source"] = source_type
+    item["fulltext_available"] = source_type in {"fetched_fulltext", "rss_content"}
     return {"ok": True, "post": item}
 
 
