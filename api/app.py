@@ -53,6 +53,7 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 _ZH_RE = re.compile(r"[\u4e00-\u9fff]")
 _HTML_TAG_RE = re.compile(r"<[^>]+>")
+_BLOCK_BREAK_RE = re.compile(r"</?(p|div|article|section|h1|h2|h3|h4|h5|h6|li|ul|ol|blockquote|pre|br)[^>]*>", re.IGNORECASE)
 
 
 def _seed_sources_from_snapshot(path: str = "data/gist_sources_weekly.json") -> int:
@@ -260,6 +261,24 @@ def _split_text_chunks(text: str, chunk_size: int = 800) -> List[str]:
     return chunks
 
 
+def _extract_paragraphs(text: str, max_paragraphs: int = 120) -> List[str]:
+    if not text:
+        return []
+    t = text
+    # Keep paragraph boundaries from common block tags.
+    t = _BLOCK_BREAK_RE.sub("\n\n", t)
+    t = _HTML_TAG_RE.sub(" ", t)
+    t = t.replace("\r\n", "\n").replace("\r", "\n")
+    t = re.sub(r"[ \t]+", " ", t)
+    raw_parts = [x.strip() for x in re.split(r"\n{2,}", t) if x.strip()]
+    # Fallback when source has no block boundaries.
+    if len(raw_parts) <= 1:
+        line_parts = [x.strip() for x in t.split("\n") if x.strip()]
+        if line_parts:
+            raw_parts = line_parts
+    return raw_parts[:max_paragraphs]
+
+
 def _translate_long_to_zh(text: str, max_chars: int = 6000) -> str:
     clean = _HTML_TAG_RE.sub(" ", text or "")
     clean = re.sub(r"\s+", " ", clean).strip()
@@ -272,6 +291,18 @@ def _translate_long_to_zh(text: str, max_chars: int = 6000) -> str:
     for chunk in _split_text_chunks(clean, chunk_size=700):
         out.append(_translate_to_zh(chunk, limit=740))
     return "\n".join(x for x in out if x).strip()
+
+
+def _translate_paragraphs(paragraphs: List[str], max_paragraph_chars: int = 1000) -> List[Dict[str, str]]:
+    out: List[Dict[str, str]] = []
+    for p in paragraphs:
+        en = (p or "").strip()
+        if not en:
+            continue
+        en = en[:max_paragraph_chars]
+        zh = _translate_to_zh(en, limit=max(120, min(1200, len(en) + 80)))
+        out.append({"en": en, "zh": zh})
+    return out
 
 
 @app.get("/healthz")
@@ -385,9 +416,13 @@ def api_post_detail(post_id: int) -> Dict:
     item["zh_title"] = _translate_to_zh(item.get("title", ""), limit=120)
     item["zh_summary"] = _translate_to_zh(item.get("summary", ""), limit=320)
     content = item.get("content") or item.get("summary") or ""
-    item["content_en"] = _HTML_TAG_RE.sub(" ", content)
-    item["content_en"] = re.sub(r"\s+", " ", item["content_en"]).strip()
-    item["content_zh"] = _translate_long_to_zh(content if content else item.get("summary", ""), max_chars=7000)
+    paragraphs = _extract_paragraphs(content, max_paragraphs=120)
+    if not paragraphs:
+        paragraphs = _extract_paragraphs(item.get("summary") or "", max_paragraphs=20)
+    para_pairs = _translate_paragraphs(paragraphs)
+    item["paragraphs"] = para_pairs
+    item["content_en"] = "\n\n".join(x["en"] for x in para_pairs)
+    item["content_zh"] = "\n\n".join(x["zh"] for x in para_pairs)
     return {"ok": True, "post": item}
 
 

@@ -57,6 +57,7 @@ python cli.py serve --db data/ainews.db --host 0.0.0.0 --port 8000
 - 文章列表展示：中文标题、中文摘要、Topic/Tag 标签
 - 首页 Topic/Tag 可点击，新窗口打开对应文章列表（`/browse`）
 - 文章支持阅读模式：中文阅读 / 中英文对照（`/read?id=...`）
+- 阅读页保留段落结构，并按段落做中英对照翻译
 
 ## API 示例
 
