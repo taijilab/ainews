@@ -21,6 +21,10 @@
       a.pill { color: var(--ink); text-decoration: none; }
       .summary { margin-top:14px; font-size:15px; line-height:1.75; }
       .warn { margin-top:10px; border:1px solid #e2c9ad; background:#fff7ed; color:#7f4c26; border-radius:10px; padding:8px 10px; font-size:13px; }
+      .manual { margin-top:10px; border:1px solid var(--line); background:#fff; border-radius:10px; padding:10px; display:none; }
+      .manual h3 { margin:0 0 8px; font-size:14px; color:var(--muted); }
+      .manual textarea { width:100%; min-height:160px; border:1px solid var(--line); border-radius:8px; padding:8px; font-size:13px; font-family:inherit; }
+      .manual .row { margin-top:8px; display:flex; gap:8px; flex-wrap:wrap; }
       .grid { margin-top:12px; display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
       .pane { border:1px solid var(--line); border-radius:10px; padding:12px; background:#fff; }
       .pane h3 { margin:0 0 8px; font-size:14px; color:var(--muted); }
@@ -42,6 +46,14 @@
         </div>
         <div class="tags" id="tags"></div>
         <div class="warn" id="warn" style="display:none;"></div>
+        <div class="manual" id="manualPanel">
+          <h3>手动粘贴全文（用于被源站拦截的文章）</h3>
+          <textarea id="manualText" placeholder="把原文页面正文粘贴到这里，然后点“翻译并应用”"></textarea>
+          <div class="row">
+            <button id="manualApplyBtn" class="btn" type="button">翻译并应用</button>
+            <span id="manualMsg" class="meta"></span>
+          </div>
+        </div>
         <div class="summary" id="summary"></div>
         <div id="contentArea"></div>
       </div>
@@ -59,6 +71,10 @@
       const tagsEl = document.getElementById('tags');
       const summaryEl = document.getElementById('summary');
       const warnEl = document.getElementById('warn');
+      const manualPanelEl = document.getElementById('manualPanel');
+      const manualTextEl = document.getElementById('manualText');
+      const manualApplyBtnEl = document.getElementById('manualApplyBtn');
+      const manualMsgEl = document.getElementById('manualMsg');
       const contentAreaEl = document.getElementById('contentArea');
       const sourceLinkEl = document.getElementById('sourceLink');
       const modeZhEl = document.getElementById('modeZh');
@@ -78,9 +94,11 @@
         if (!post.fulltext_available) {
           warnEl.style.display = 'block';
           warnEl.textContent = '当前仅显示 RSS 摘要。源站限制了全文抓取（如 403/反爬）。请点击“打开原文”查看完整内容。';
+          manualPanelEl.style.display = 'block';
         } else {
           warnEl.style.display = 'none';
           warnEl.textContent = '';
+          manualPanelEl.style.display = 'none';
         }
 
         const topicTags = (post.topics || []).slice(0,8).map((x) =>
@@ -123,6 +141,32 @@
 
       modeZhEl.addEventListener('click', () => { mode = 'zh'; render(); });
       modeBiEl.addEventListener('click', () => { mode = 'bilingual'; render(); });
+      manualApplyBtnEl.addEventListener('click', async () => {
+        const text = manualTextEl.value.trim();
+        if (!text) {
+          manualMsgEl.textContent = '请先粘贴原文内容';
+          return;
+        }
+        manualMsgEl.textContent = '翻译中...';
+        const r = await fetch('/api/translate/raw', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: post?.title || '', text })
+        });
+        const data = await r.json();
+        if (!data.ok) {
+          manualMsgEl.textContent = `失败：${data.error || 'unknown'}`;
+          return;
+        }
+        post.zh_title = data.zh_title || post.zh_title;
+        post.paragraphs = data.paragraphs || [];
+        post.content_en = data.content_en || post.content_en;
+        post.content_zh = data.content_zh || post.content_zh;
+        post.fulltext_available = true;
+        warnEl.style.display = 'none';
+        manualMsgEl.textContent = `完成：${(data.paragraphs || []).length} 段`;
+        render();
+      });
       load();
     </script>
   </body>

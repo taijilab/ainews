@@ -471,6 +471,29 @@ def api_post_detail(post_id: int) -> Dict:
     return {"ok": True, "post": item}
 
 
+@app.post("/api/translate/raw")
+def api_translate_raw(payload: Dict) -> Dict:
+    text = (payload.get("text") or "").strip()
+    title = (payload.get("title") or "").strip()
+    if not text:
+        return {"ok": False, "error": "text is required"}
+
+    paragraphs = _extract_paragraphs(text, max_paragraphs=260)
+    if not paragraphs:
+        return {"ok": False, "error": "no valid paragraphs"}
+    para_pairs = _translate_paragraphs(paragraphs, max_paragraph_chars=1600)
+    zh_title = _translate_to_zh(title, limit=120) if title else ""
+
+    return {
+        "ok": True,
+        "title": title,
+        "zh_title": zh_title,
+        "paragraphs": para_pairs,
+        "content_en": "\n\n".join(x["en"] for x in para_pairs),
+        "content_zh": "\n\n".join(x["zh"] for x in para_pairs),
+    }
+
+
 @app.post("/api/sources")
 def add_source(payload: Dict) -> Dict:
     feed_url = (payload.get("feed_url") or "").strip()
