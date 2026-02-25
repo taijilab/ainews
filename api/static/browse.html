@@ -18,6 +18,9 @@
       .zh { margin:0 0 4px; font-size:15px; font-weight:700; }
       .zh a { color:var(--ink); text-decoration:none; }
       .zh a:hover { color:#b5522e; }
+      .en { margin:0 0 4px; font-size:13px; font-weight:500; }
+      .en a { color:var(--ink); text-decoration:none; }
+      .en a:hover { color:#b5522e; }
       .meta { margin-top:4px; color:var(--muted); font-size:12px; }
       .sum { margin-top:6px; font-size:13px; color:#3f4d5a; line-height:1.5; }
       .empty { color:var(--muted); padding:12px; }
@@ -56,6 +59,7 @@
         listEl.innerHTML = posts.map((p) => `
           <article class="item">
             <h3 class="zh"><a href="/read?id=${encodeURIComponent(p.id)}" target="_blank" rel="noopener noreferrer">中文阅读：${esc(p.zh_title || p.title || '')}</a></h3>
+            <h4 class="en"><a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">English: ${esc(p.title || '')}</a></h4>
             <div class="meta">${esc(p.blog_id || '')} · ${esc((p.published_at || '').replace('T', ' ').slice(0, 16))}</div>
             ${p.zh_summary ? `<div class="sum">${esc(p.zh_summary)}</div>` : ''}
           </article>

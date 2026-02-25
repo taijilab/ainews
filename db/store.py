@@ -230,6 +230,33 @@ class Store:
                     )
                     inserted.append(cur.lastrowid)
                 except sqlite3.IntegrityError:
+                    # Existing post: refresh key metadata so parser fixes can correct old rows.
+                    conn.execute(
+                        """
+                        UPDATE posts
+                        SET
+                          published_at = ?,
+                          author = COALESCE(NULLIF(?, ''), author),
+                          summary = COALESCE(NULLIF(?, ''), summary),
+                          content = CASE WHEN length(COALESCE(content, '')) >= length(COALESCE(?, ''))
+                                         THEN content ELSE ? END
+                        WHERE canonical_url = ?
+                           OR (feed_id = ? AND guid = ?)
+                           OR (title_norm = ? AND published_at = ?)
+                        """,
+                        (
+                            p.published_at,
+                            p.author,
+                            p.summary,
+                            p.content,
+                            p.content,
+                            p.canonical_url,
+                            p.feed_id,
+                            p.guid,
+                            p.title_norm,
+                            p.published_at,
+                        ),
+                    )
                     continue
         return inserted
 
