@@ -7,6 +7,7 @@ import re
 from functools import lru_cache
 from typing import Dict, List, Optional
 from xml.etree import ElementTree as ET
+import sqlite3
 
 from fastapi import FastAPI, Query
 from fastapi.responses import FileResponse, Response
@@ -17,9 +18,28 @@ from db.store import Store
 from crawler.fetcher import fetch_feed
 
 
-DB_PATH = os.getenv("AINEWS_DB_PATH", "data/ainews.db")
-store = Store(DB_PATH)
-store.init_db()
+def _is_serverless() -> bool:
+    return bool(os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"))
+
+
+def _build_store() -> Store:
+    env_db = os.getenv("AINEWS_DB_PATH")
+    db_path = env_db if env_db else ("/tmp/ainews.db" if _is_serverless() else "data/ainews.db")
+
+    primary = Store(db_path)
+    try:
+        primary.init_db()
+        return primary
+    except (sqlite3.OperationalError, PermissionError, OSError):
+        # In serverless runtime, writeable filesystem is typically /tmp only.
+        if db_path != "/tmp/ainews.db":
+            fallback = Store("/tmp/ainews.db")
+            fallback.init_db()
+            return fallback
+        raise
+
+
+store = _build_store()
 
 app = FastAPI(title="AI News Daily API", version="0.1.0")
 STATIC_DIR = Path(__file__).parent / "static"
