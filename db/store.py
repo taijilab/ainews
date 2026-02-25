@@ -442,6 +442,27 @@ class Store:
                 ).fetchall()
             return []
 
+    def get_post_detail(self, post_id: int) -> sqlite3.Row | None:
+        with self.connect() as conn:
+            return conn.execute(
+                """
+                SELECT
+                  p.id, p.title, p.url, p.author, p.blog_id, p.published_at,
+                  COALESCE(p.summary, '') AS summary,
+                  COALESCE(p.content, '') AS content,
+                  COALESCE(MAX(CASE WHEN pl.primary_label = 1 THEN pl.label_id END), '') AS primary_label,
+                  COALESCE(GROUP_CONCAT(DISTINCT pl.label_id), '') AS label_tags,
+                  COALESCE(GROUP_CONCAT(DISTINCT t.title), '') AS topic_tags
+                FROM posts p
+                LEFT JOIN post_labels pl ON pl.post_id = p.id
+                LEFT JOIN topic_posts tp ON tp.post_id = p.id
+                LEFT JOIN topics t ON t.topic_id = tp.topic_id
+                WHERE p.id = ?
+                GROUP BY p.id, p.title, p.url, p.author, p.blog_id, p.published_at, p.summary, p.content
+                """,
+                (post_id,),
+            ).fetchone()
+
     def api_available_dates(self, limit: int = 90) -> list[sqlite3.Row]:
         with self.connect() as conn:
             return conn.execute(

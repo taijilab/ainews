@@ -56,6 +56,7 @@ python cli.py serve --db data/ainews.db --host 0.0.0.0 --port 8000
 - 数据源管理页支持：列表查看、手工添加、删除、Gist 预填
 - 文章列表展示：中文标题、中文摘要、Topic/Tag 标签
 - 首页 Topic/Tag 可点击，新窗口打开对应文章列表（`/browse`）
+- 文章支持阅读模式：中文阅读 / 中英文对照（`/read?id=...`）
 
 ## API 示例
 
@@ -71,6 +72,7 @@ python cli.py serve --db data/ainews.db --host 0.0.0.0 --port 8000
 - `POST /api/sources/import-gist`
 - `POST /api/sources/prefill-local-gist`
 - `GET /api/browse?kind=topic|tag&value=...`
+- `GET /api/post/{post_id}`
 
 ## 说明
 

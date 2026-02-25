@@ -245,6 +245,35 @@ def _translate_to_zh(text: str, limit: int = 220) -> str:
     return _to_cn_text(value, limit=limit)
 
 
+def _split_text_chunks(text: str, chunk_size: int = 800) -> List[str]:
+    t = _HTML_TAG_RE.sub(" ", text or "")
+    t = re.sub(r"\s+", " ", t).strip()
+    if not t:
+        return []
+    chunks: List[str] = []
+    i = 0
+    n = len(t)
+    while i < n:
+        j = min(i + chunk_size, n)
+        chunks.append(t[i:j])
+        i = j
+    return chunks
+
+
+def _translate_long_to_zh(text: str, max_chars: int = 6000) -> str:
+    clean = _HTML_TAG_RE.sub(" ", text or "")
+    clean = re.sub(r"\s+", " ", clean).strip()
+    if not clean:
+        return ""
+    if _ZH_RE.search(clean):
+        return clean[:max_chars]
+    clean = clean[:max_chars]
+    out: List[str] = []
+    for chunk in _split_text_chunks(clean, chunk_size=700):
+        out.append(_translate_to_zh(chunk, limit=740))
+    return "\n".join(x for x in out if x).strip()
+
+
 @app.get("/healthz")
 def healthz() -> Dict[str, bool]:
     return {"ok": True}
@@ -264,6 +293,11 @@ def web_sources() -> FileResponse:
 @app.get("/browse")
 def web_browse() -> FileResponse:
     return FileResponse(STATIC_DIR / "browse.html")
+
+
+@app.get("/read")
+def web_read() -> FileResponse:
+    return FileResponse(STATIC_DIR / "read.html")
 
 
 @app.get("/favicon.ico")
@@ -338,6 +372,23 @@ def api_browse(
         item["zh_title"] = _translate_to_zh(item.get("title", ""), limit=120)
         item["zh_summary"] = _translate_to_zh(item.get("summary", ""), limit=220)
     return {"kind": kind, "value": value, "count": len(rows), "posts": rows}
+
+
+@app.get("/api/post/{post_id}")
+def api_post_detail(post_id: int) -> Dict:
+    row = store.get_post_detail(post_id)
+    if not row:
+        return {"ok": False, "error": "post not found"}
+    item = dict(row)
+    item["labels"] = [x for x in (item.get("label_tags") or "").split(",") if x]
+    item["topics"] = [x for x in (item.get("topic_tags") or "").split(",") if x]
+    item["zh_title"] = _translate_to_zh(item.get("title", ""), limit=120)
+    item["zh_summary"] = _translate_to_zh(item.get("summary", ""), limit=320)
+    content = item.get("content") or item.get("summary") or ""
+    item["content_en"] = _HTML_TAG_RE.sub(" ", content)
+    item["content_en"] = re.sub(r"\s+", " ", item["content_en"]).strip()
+    item["content_zh"] = _translate_long_to_zh(content if content else item.get("summary", ""), max_chars=7000)
+    return {"ok": True, "post": item}
 
 
 @app.post("/api/sources")
