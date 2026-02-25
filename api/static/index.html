@@ -50,6 +50,18 @@
         font-weight: 800;
       }
 
+      .build-chip {
+        display: inline-block;
+        margin-left: 10px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: #f8f2e8;
+        font-size: 12px;
+        color: var(--muted);
+        vertical-align: middle;
+      }
+
       .sub {
         color: var(--muted);
         margin-top: 6px;
@@ -223,23 +235,6 @@
         color: var(--accent);
       }
 
-      .post-actions {
-        margin-top: 6px;
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-
-      .post-actions a {
-        font-size: 12px;
-        color: var(--muted);
-        text-decoration: none;
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        padding: 2px 8px;
-        background: #faf5ec;
-      }
-
       .post-meta {
         margin-top: 4px;
         color: var(--muted);
@@ -272,7 +267,7 @@
 
       .zh-title {
         margin: 0 0 4px;
-        font-size: 15px;
+        font-size: 14px;
         font-weight: 700;
       }
 
@@ -310,7 +305,7 @@
     <div class="page">
       <div class="hero">
         <div>
-          <h1>AI 资讯日报时间表</h1>
+          <h1>AI 资讯日报时间表 <span class="build-chip" id="buildVersion">build dev</span></h1>
           <div class="sub" id="subtitle">按日期查看每天的新闻资讯、热点话题与来源覆盖</div>
         </div>
         <a class="open-source" href="/sources" target="_blank" rel="noopener noreferrer">数据源管理（新窗口）</a>
@@ -347,6 +342,7 @@
       const topicsEl = document.getElementById('topics');
       const postsEl = document.getElementById('posts');
       const subtitleEl = document.getElementById('subtitle');
+      const buildVersionEl = document.getElementById('buildVersion');
 
       function fmtDate(day) {
         const d = new Date(day + 'T00:00:00Z');
@@ -421,12 +417,8 @@
         }
         postsEl.innerHTML = posts.map((p) => `
           <article class="post-item">
-            <h3 class="zh-title"><a href="/read?id=${encodeURIComponent(p.id)}" target="_blank" rel="noopener noreferrer">${esc(p.zh_title || p.title || '')}</a></h3>
+            <h3 class="zh-title"><a href="/read?id=${encodeURIComponent(p.id)}" target="_blank" rel="noopener noreferrer">中文阅读：${esc(p.zh_title || p.title || '')}</a></h3>
             <div class="post-meta">${esc(p.blog_id || '')} · ${esc((p.published_at || '').replace('T', ' ').slice(0, 16))}</div>
-            <div class="post-actions">
-              <a href="/read?id=${encodeURIComponent(p.id)}" target="_blank" rel="noopener noreferrer">中文/对照阅读</a>
-              <a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">原文</a>
-            </div>
             ${p.zh_summary ? `<div class="summary">${esc(p.zh_summary)}</div>` : ''}
             <div class="tag-row">
             ${p.primary_label ? `<span class="pill">${esc(p.primary_label)}</span>` : ''}
@@ -447,6 +439,12 @@
       }
 
       async function boot() {
+        try {
+          const metaResp = await fetch('/api/meta');
+          const meta = await metaResp.json();
+          buildVersionEl.textContent = `build ${meta.build_version || 'dev'}`;
+        } catch (_) {}
+
         const resp = await fetch('/api/dates?limit=120');
         const dates = await resp.json();
         state.dates = dates;

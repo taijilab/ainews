@@ -342,6 +342,13 @@ def healthz() -> Dict[str, bool]:
     return {"ok": True}
 
 
+@app.get("/api/meta")
+def api_meta() -> Dict:
+    commit = os.getenv("VERCEL_GIT_COMMIT_SHA", "").strip()
+    build_version = commit[:7] if commit else "dev"
+    return {"build_version": build_version}
+
+
 @app.get("/")
 def web_home() -> FileResponse:
     return FileResponse(STATIC_DIR / "index.html")
