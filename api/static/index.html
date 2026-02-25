@@ -276,12 +276,6 @@
         font-weight: 700;
       }
 
-      .en-title-label {
-        margin-top: 3px;
-        font-size: 12px;
-        color: var(--muted);
-      }
-
       .summary {
         margin-top: 6px;
         font-size: 13px;
@@ -427,9 +421,7 @@
         }
         postsEl.innerHTML = posts.map((p) => `
           <article class="post-item">
-            <h3 class="zh-title">中文标题：${esc(p.zh_title || p.title || '')}</h3>
-            <div class="en-title-label">English Title</div>
-            <h3 class="post-title"><a href="/read?id=${encodeURIComponent(p.id)}" target="_blank" rel="noopener noreferrer">${esc(p.title)}</a></h3>
+            <h3 class="zh-title"><a href="/read?id=${encodeURIComponent(p.id)}" target="_blank" rel="noopener noreferrer">${esc(p.zh_title || p.title || '')}</a></h3>
             <div class="post-meta">${esc(p.blog_id || '')} · ${esc((p.published_at || '').replace('T', ' ').slice(0, 16))}</div>
             <div class="post-actions">
               <a href="/read?id=${encodeURIComponent(p.id)}" target="_blank" rel="noopener noreferrer">中文/对照阅读</a>

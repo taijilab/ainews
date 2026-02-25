@@ -18,6 +18,7 @@
       .btn.active { background:#f2d8c6; border-color:#c98c6f; }
       .tags { margin-top:10px; display:flex; gap:6px; flex-wrap:wrap; }
       .pill { border:1px solid var(--line); background:#f8f2e8; border-radius:999px; padding:2px 8px; font-size:12px; }
+      a.pill { color: var(--ink); text-decoration: none; }
       .summary { margin-top:14px; font-size:15px; line-height:1.75; }
       .grid { margin-top:12px; display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
       .pane { border:1px solid var(--line); border-radius:10px; padding:12px; background:#fff; }
@@ -72,10 +73,13 @@
         summaryEl.textContent = post.zh_summary || '';
         sourceLinkEl.href = post.url || '#';
 
-        const tags = [];
-        (post.topics || []).slice(0,8).forEach((x) => tags.push(`Topic: ${x}`));
-        (post.labels || []).slice(0,8).forEach((x) => tags.push(`Tag: ${x}`));
-        tagsEl.innerHTML = tags.map((x) => `<span class="pill">${esc(x)}</span>`).join('');
+        const topicTags = (post.topics || []).slice(0,8).map((x) =>
+          `<a class="pill" target="_blank" rel="noopener noreferrer" href="/browse?kind=topic&value=${encodeURIComponent(x)}">Topic: ${esc(x)}</a>`
+        );
+        const labelTags = (post.labels || []).slice(0,8).map((x) =>
+          `<a class="pill" target="_blank" rel="noopener noreferrer" href="/browse?kind=tag&value=${encodeURIComponent(x)}">Tag: ${esc(x)}</a>`
+        );
+        tagsEl.innerHTML = topicTags.join('') + labelTags.join('');
 
         modeZhEl.classList.toggle('active', mode === 'zh');
         modeBiEl.classList.toggle('active', mode === 'bilingual');
