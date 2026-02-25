@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Topic/Tag 文章列表</title>
+    <style>
+      :root { --bg:#f6f1e8; --card:#fffdfa; --ink:#1f2a37; --muted:#576575; --line:#dccfb8; }
+      * { box-sizing: border-box; }
+      body { margin:0; font-family:"Avenir Next","Manrope","IBM Plex Sans","PingFang SC",sans-serif; color:var(--ink); background:var(--bg); }
+      .page { max-width: 980px; margin: 0 auto; padding: 22px 16px 36px; }
+      .card { border:1px solid var(--line); border-radius: 14px; background:var(--card); padding:14px; }
+      h1 { margin:0; font-size: 26px; }
+      .sub { margin-top:6px; color:var(--muted); font-size:13px; }
+      .list { margin-top: 14px; display:grid; gap:10px; }
+      .item { border-bottom: 1px dashed var(--line); padding-bottom:10px; }
+      .item:last-child { border-bottom:none; }
+      .zh { margin:0 0 4px; font-size:15px; font-weight:700; }
+      .en { margin:0; font-size:14px; }
+      .en a { color:var(--ink); text-decoration:none; }
+      .en a:hover { color:#b5522e; }
+      .meta { margin-top:4px; color:var(--muted); font-size:12px; }
+      .sum { margin-top:6px; font-size:13px; color:#3f4d5a; line-height:1.5; }
+      .empty { color:var(--muted); padding:12px; }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="card">
+        <h1 id="title">文章列表</h1>
+        <div class="sub" id="sub"></div>
+        <div class="list" id="list"></div>
+      </div>
+    </div>
+
+    <script>
+      function esc(s) {
+        return (s || '').replace(/[&<>"]/g, (c) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+      }
+      const params = new URLSearchParams(window.location.search);
+      const kind = params.get('kind') || 'topic';
+      const value = params.get('value') || '';
+      const titleEl = document.getElementById('title');
+      const subEl = document.getElementById('sub');
+      const listEl = document.getElementById('list');
+
+      async function load() {
+        titleEl.textContent = `${kind === 'topic' ? 'Topic' : 'Tag'}: ${value}`;
+        const r = await fetch(`/api/browse?kind=${encodeURIComponent(kind)}&value=${encodeURIComponent(value)}`);
+        const data = await r.json();
+        subEl.textContent = `共 ${data.count || 0} 篇`;
+        const posts = data.posts || [];
+        if (!posts.length) {
+          listEl.innerHTML = '<div class="empty">暂无文章</div>';
+          return;
+        }
+        listEl.innerHTML = posts.map((p) => `
+          <article class="item">
+            <h3 class="zh">中文标题：${esc(p.zh_title || p.title || '')}</h3>
+            <h3 class="en"><a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">${esc(p.title || '')}</a></h3>
+            <div class="meta">${esc(p.blog_id || '')} · ${esc((p.published_at || '').replace('T', ' ').slice(0, 16))}</div>
+            ${p.zh_summary ? `<div class="sum">${esc(p.zh_summary)}</div>` : ''}
+          </article>
+        `).join('');
+      }
+      load();
+    </script>
+  </body>
+</html>

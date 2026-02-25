@@ -405,6 +405,43 @@ class Store:
                 (f"%{q}%",),
             ).fetchall()
 
+    def api_browse_posts(self, kind: str, value: str, limit: int = 300) -> list[sqlite3.Row]:
+        with self.connect() as conn:
+            if kind == "topic":
+                return conn.execute(
+                    """
+                    SELECT DISTINCT
+                      p.id, p.title, p.url, p.author, p.blog_id, p.published_at, p.summary,
+                      COALESCE(MAX(CASE WHEN pl.primary_label = 1 THEN pl.label_id END), '') AS primary_label
+                    FROM posts p
+                    JOIN topic_posts tp ON tp.post_id = p.id
+                    JOIN topics t ON t.topic_id = tp.topic_id
+                    LEFT JOIN post_labels pl ON pl.post_id = p.id
+                    WHERE t.title = ?
+                    GROUP BY p.id, p.title, p.url, p.author, p.blog_id, p.published_at, p.summary
+                    ORDER BY datetime(p.published_at) DESC
+                    LIMIT ?
+                    """,
+                    (value, limit),
+                ).fetchall()
+            if kind == "tag":
+                return conn.execute(
+                    """
+                    SELECT DISTINCT
+                      p.id, p.title, p.url, p.author, p.blog_id, p.published_at, p.summary,
+                      COALESCE(MAX(CASE WHEN pl2.primary_label = 1 THEN pl2.label_id END), '') AS primary_label
+                    FROM posts p
+                    JOIN post_labels pl ON pl.post_id = p.id
+                    LEFT JOIN post_labels pl2 ON pl2.post_id = p.id
+                    WHERE pl.label_id = ?
+                    GROUP BY p.id, p.title, p.url, p.author, p.blog_id, p.published_at, p.summary
+                    ORDER BY datetime(p.published_at) DESC
+                    LIMIT ?
+                    """,
+                    (value, limit),
+                ).fetchall()
+            return []
+
     def api_available_dates(self, limit: int = 90) -> list[sqlite3.Row]:
         with self.connect() as conn:
             return conn.execute(

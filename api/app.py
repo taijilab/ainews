@@ -261,6 +261,11 @@ def web_sources() -> FileResponse:
     return FileResponse(STATIC_DIR / "sources.html")
 
 
+@app.get("/browse")
+def web_browse() -> FileResponse:
+    return FileResponse(STATIC_DIR / "browse.html")
+
+
 @app.get("/favicon.ico")
 def favicon() -> Response:
     return Response(status_code=204)
@@ -320,6 +325,19 @@ def get_daily(day: str = Query(..., pattern=r"^\d{4}-\d{2}-\d{2}$")) -> Dict:
 def get_sources(days: int = Query(7, ge=1, le=30)) -> List[Dict]:
     _ensure_sources_seeded()
     return [dict(r) for r in store.api_sources(days=days)]
+
+
+@app.get("/api/browse")
+def api_browse(
+    kind: str = Query(..., pattern=r"^(topic|tag)$"),
+    value: str = Query(..., min_length=1),
+    limit: int = Query(300, ge=1, le=1000),
+) -> Dict:
+    rows = [dict(r) for r in store.api_browse_posts(kind=kind, value=value, limit=limit)]
+    for item in rows:
+        item["zh_title"] = _translate_to_zh(item.get("title", ""), limit=120)
+        item["zh_summary"] = _translate_to_zh(item.get("summary", ""), limit=220)
+    return {"kind": kind, "value": value, "count": len(rows), "posts": rows}
 
 
 @app.post("/api/sources")

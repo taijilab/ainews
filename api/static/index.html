@@ -239,6 +239,15 @@
         background: #f9f5ee;
       }
 
+      a.pill {
+        color: var(--ink);
+        text-decoration: none;
+      }
+
+      a.pill:hover {
+        background: #f0e8db;
+      }
+
       .empty {
         color: var(--muted);
         padding: 12px;
@@ -408,8 +417,8 @@
             ${p.zh_summary ? `<div class="summary">${esc(p.zh_summary)}</div>` : ''}
             <div class="tag-row">
             ${p.primary_label ? `<span class="pill">${esc(p.primary_label)}</span>` : ''}
-            ${(p.topics || []).slice(0, 4).map((t) => `<span class="pill">Topic: ${esc(t)}</span>`).join('')}
-            ${(p.labels || []).slice(0, 4).map((t) => `<span class="pill">Tag: ${esc(t)}</span>`).join('')}
+            ${(p.topics || []).slice(0, 4).map((t) => `<a class="pill" target="_blank" rel="noopener noreferrer" href="/browse?kind=topic&value=${encodeURIComponent(t)}">Topic: ${esc(t)}</a>`).join('')}
+            ${(p.labels || []).slice(0, 4).map((t) => `<a class="pill" target="_blank" rel="noopener noreferrer" href="/browse?kind=tag&value=${encodeURIComponent(t)}">Tag: ${esc(t)}</a>`).join('')}
             </div>
           </article>
         `).join('');
