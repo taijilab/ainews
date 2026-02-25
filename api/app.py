@@ -50,6 +50,58 @@ _ZH_RE = re.compile(r"[\u4e00-\u9fff]")
 _HTML_TAG_RE = re.compile(r"<[^>]+>")
 
 
+def _seed_sources_from_snapshot(path: str = "data/gist_sources_weekly.json") -> int:
+    base_dir = Path(__file__).resolve().parents[1]
+    candidates = [
+        Path(path),
+        base_dir / path,
+        base_dir / "data" / "gist_sources_weekly.json",
+    ]
+    p = None
+    for c in candidates:
+        if c.exists():
+            p = c
+            break
+    if p is None:
+        return 0
+
+    try:
+        obj = json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return 0
+
+    rows = obj.get("rows") or []
+    imported = 0
+    for r in rows:
+        feed_url = (r.get("rss_url") or "").strip()
+        if not feed_url:
+            continue
+        title = (r.get("name") or "").strip()
+        site_url = (r.get("blog_address") or "").strip()
+        topic = (r.get("topic") or "").strip()
+        status = (r.get("network_status") or "").strip()
+        feed_id = store.upsert_feed(feed_url=feed_url, title=title, site_url=site_url)
+        store.update_feed_meta(
+            feed_id,
+            source_topic=topic if topic else None,
+            source_status=status if status else None,
+        )
+        imported += 1
+    return imported
+
+
+def _ensure_sources_seeded() -> None:
+    try:
+        if store.feed_count() > 0:
+            return
+        seeded = _seed_sources_from_snapshot("data/gist_sources_weekly.json")
+        if seeded == 0:
+            # Last fallback: try online gist import when local snapshot is unavailable.
+            import_sources_from_gist({"probe": False})
+    except Exception:
+        pass
+
+
 def _to_cn_text(text: str, limit: int = 220) -> str:
     value = (text or "").strip()
     if not value:
@@ -101,11 +153,7 @@ def web_home() -> FileResponse:
 
 @app.get("/sources")
 def web_sources() -> FileResponse:
-    try:
-        if store.feed_count() == 0:
-            prefill_sources_from_local_gist({"path": "data/gist_sources_weekly.json"})
-    except Exception:
-        pass
+    _ensure_sources_seeded()
     return FileResponse(STATIC_DIR / "sources.html")
 
 
@@ -164,6 +212,7 @@ def get_daily(day: str = Query(..., pattern=r"^\d{4}-\d{2}-\d{2}$")) -> Dict:
 
 @app.get("/api/sources")
 def get_sources(days: int = Query(7, ge=1, le=30)) -> List[Dict]:
+    _ensure_sources_seeded()
     return [dict(r) for r in store.api_sources(days=days)]
 
 
@@ -271,37 +320,8 @@ def import_sources_from_gist(payload: Optional[Dict] = None) -> Dict:
 def prefill_sources_from_local_gist(payload: Optional[Dict] = None) -> Dict:
     data = payload or {}
     path = data.get("path", "data/gist_sources_weekly.json")
-    base_dir = Path(__file__).resolve().parents[1]
-    candidates = [
-        Path(path),
-        base_dir / path,
-        base_dir / "data" / "gist_sources_weekly.json",
-    ]
-    p = None
-    for c in candidates:
-        if c.exists():
-            p = c
-            break
-    if p is None:
-        # Fallback to online gist import if local snapshot does not exist.
-        return import_sources_from_gist({"probe": False})
-
-    try:
-        obj = json.loads(p.read_text(encoding="utf-8"))
-    except Exception as exc:
-        return {"ok": False, "imported": 0, "error": str(exc)[:240]}
-
-    rows = obj.get("rows") or []
-    imported = 0
-    for r in rows:
-        feed_url = (r.get("rss_url") or "").strip()
-        if not feed_url:
-            continue
-        title = (r.get("name") or "").strip()
-        site_url = (r.get("blog_address") or "").strip()
-        topic = (r.get("topic") or "").strip()
-        status = (r.get("network_status") or "").strip()
-        feed_id = store.upsert_feed(feed_url=feed_url, title=title, site_url=site_url)
-        store.update_feed_meta(feed_id, source_topic=topic if topic else None, source_status=status if status else None)
-        imported += 1
-    return {"ok": True, "imported": imported, "path": str(p)}
+    imported = _seed_sources_from_snapshot(path)
+    if imported > 0:
+        return {"ok": True, "imported": imported, "path": path}
+    # Fallback to online gist import if local snapshot does not exist.
+    return import_sources_from_gist({"probe": False})
