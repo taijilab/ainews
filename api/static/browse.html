@@ -58,8 +58,8 @@
         }
         listEl.innerHTML = posts.map((p) => `
           <article class="item">
-            <h3 class="zh"><a href="/read?id=${encodeURIComponent(p.id)}" target="_blank" rel="noopener noreferrer">中文阅读：${esc(p.zh_title || p.title || '')}</a></h3>
-            <h4 class="en"><a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">English: ${esc(p.title || '')}</a></h4>
+            <h3 class="zh"><a href="/read?id=${encodeURIComponent(p.id)}" target="_blank" rel="noopener noreferrer">${esc(p.zh_title || p.title || '')}</a></h3>
+            <h4 class="en"><a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">${esc(p.title || '')}</a></h4>
             <div class="meta">${esc(p.blog_id || '')} · ${esc((p.published_at || '').replace('T', ' ').slice(0, 16))}</div>
             ${p.zh_summary ? `<div class="sum">${esc(p.zh_summary)}</div>` : ''}
           </article>
