@@ -11,14 +11,26 @@
         --ink: #1f2a37;
         --muted: #51606f;
         --line: #dccfb8;
+        --accent: #b5522e;
       }
-      * { box-sizing: border-box; }
+      * { box-sizing: border-box; touch-action: manipulation; }
+      html { scroll-behavior: smooth; }
       body {
         margin: 0;
         font-family: "Avenir Next", "Manrope", "IBM Plex Sans", "PingFang SC", sans-serif;
         color: var(--ink);
         background: var(--bg);
       }
+
+      @media (prefers-color-scheme: dark) {
+        :root { --bg:#1a1a1a; --card:#242424; --ink:#e8e0d4; --muted:#9aa3ad; --line:#3a3530; --accent:#d4704a; }
+        .btn { background:#2e1e14; }
+        .btn:hover { background:#3d2518; }
+        .btn-danger { background:#2e1210; border-color:#7a3020; }
+        .row input { background:#2a2a2a; color:var(--ink); }
+        th { background:#1e1e1e; }
+      }
+
       .page { max-width: 1220px; margin: 0 auto; padding: 22px 16px 40px; }
       .card { border: 1px solid var(--line); border-radius: 14px; background: var(--card); padding: 14px; }
       h1 { margin: 0; font-size: 28px; }
@@ -31,8 +43,11 @@
         padding: 8px 12px;
         font-size: 13px;
         cursor: pointer;
+        min-height: 44px;
       }
       .btn:hover { background: #ffe7d1; }
+      .btn:active { opacity: 0.8; transform: scale(0.97); }
+      @media (hover: none) { .btn:hover { background: #fff2e6; } }
       .btn-danger { background: #fff0eb; border-color: #d6ada1; }
       .row { margin-top: 12px; display: grid; grid-template-columns: 1.4fr 1fr 1fr auto; gap: 8px; }
       .row input {
@@ -40,6 +55,7 @@
         border-radius: 9px;
         padding: 9px 10px;
         font-size: 13px;
+        min-height: 44px;
       }
       .msg { margin-top: 8px; color: var(--muted); font-size: 13px; min-height: 20px; }
       .table-wrap { margin-top: 14px; overflow: auto; }
@@ -47,8 +63,52 @@
       th, td { border-bottom: 1px solid var(--line); padding: 8px 6px; text-align: left; vertical-align: top; }
       .ok { color: #1d6d3f; }
       .err { color: #ab3b1f; }
+
       @media (max-width: 980px) {
         .row { grid-template-columns: 1fr; }
+      }
+
+      /* ── 手机端：表格变卡片 (≤767px) ── */
+      @media (max-width: 767px) {
+        .page { padding: 14px 10px 28px; }
+        h1 { font-size: 22px; }
+
+        .table-wrap { overflow: visible; }
+        table, tbody, tr { display: block; }
+        thead { display: none; }
+        tr {
+          border: 1px solid var(--line);
+          border-radius: 12px;
+          padding: 12px;
+          margin-bottom: 10px;
+          background: var(--card);
+        }
+        td {
+          display: block;
+          border: none;
+          padding: 3px 0;
+          font-size: 13px;
+          word-break: break-all;
+        }
+        td::before {
+          font-weight: 700;
+          color: var(--muted);
+          font-size: 11px;
+          display: block;
+          margin-bottom: 2px;
+        }
+        td:nth-child(1)::before { content: "来源"; }
+        td:nth-child(2)::before { content: "博客地址"; }
+        td:nth-child(3)::before { content: "主题"; }
+        td:nth-child(4)::before { content: "近期更新"; }
+        td:nth-child(5)::before { content: "网络状态"; }
+        td:nth-child(6) {
+          margin-top: 10px;
+          display: flex;
+          gap: 8px;
+        }
+        td:nth-child(6)::before { display: none; }
+        td:nth-child(6) .btn { flex: 1; justify-content: center; display: flex; align-items: center; }
       }
     </style>
   </head>

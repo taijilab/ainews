@@ -5,19 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>文章阅读</title>
     <style>
-      :root { --bg:#f6f1e8; --card:#fffdfa; --ink:#1f2a37; --muted:#586677; --line:#dccfb8; }
-      * { box-sizing:border-box; }
+      :root { --bg:#f6f1e8; --card:#fffdfa; --ink:#1f2a37; --muted:#586677; --line:#dccfb8; --accent:#b5522e; }
+      * { box-sizing:border-box; touch-action:manipulation; }
+      html { scroll-behavior: smooth; }
       body { margin:0; font-family:"Avenir Next","Manrope","IBM Plex Sans","PingFang SC",sans-serif; color:var(--ink); background:var(--bg); }
+
+      @media (prefers-color-scheme: dark) {
+        :root { --bg:#1a1a1a; --card:#242424; --ink:#e8e0d4; --muted:#9aa3ad; --line:#3a3530; --accent:#d4704a; }
+        .btn { background:#2e1e14; }
+        .btn.active { background:#3d2518; border-color:#a06040; }
+        .pill { background:#2e2e2e; }
+        .pane { background:#2a2a2a; }
+        .manual { background:#222; }
+        .manual textarea { background:#1e1e1e; color:var(--ink); }
+        .warn { background:#2a1800; border-color:#7a4520; color:#d4956a; }
+        .lang-tabs { background:#2a2a2a; }
+      }
+
       .page { max-width: 1060px; margin:0 auto; padding: 20px 16px 40px; }
       .card { border:1px solid var(--line); border-radius:14px; background:var(--card); padding:14px; }
       h1 { margin:0; font-size:26px; }
       .en-title { margin-top:6px; font-size:15px; color:#3f4d5a; }
       .meta { margin-top:8px; font-size:12px; color:var(--muted); }
       .toolbar { margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; }
-      .btn { border:1px solid var(--line); background:#fff3e7; border-radius:9px; padding:8px 12px; cursor:pointer; font-size:13px; }
+      .btn { border:1px solid var(--line); background:#fff3e7; border-radius:9px; padding:8px 12px; cursor:pointer; font-size:13px; min-height:44px; }
       .btn.active { background:#f2d8c6; border-color:#c98c6f; }
+      .btn:active { opacity:0.8; transform:scale(0.97); }
+      @media (hover: none) { .btn:hover { background:#fff3e7; } .btn.active:hover { background:#f2d8c6; } }
       .tags { margin-top:10px; display:flex; gap:6px; flex-wrap:wrap; }
-      .pill { border:1px solid var(--line); background:#f8f2e8; border-radius:999px; padding:2px 8px; font-size:12px; }
+      .pill { border:1px solid var(--line); background:#f8f2e8; border-radius:999px; padding:2px 8px; font-size:12px; min-height:32px; display:inline-flex; align-items:center; }
       a.pill { color: var(--ink); text-decoration: none; }
       .summary { margin-top:14px; font-size:15px; line-height:1.75; }
       .warn { margin-top:10px; border:1px solid #e2c9ad; background:#fff7ed; color:#7f4c26; border-radius:10px; padding:8px 10px; font-size:13px; }
@@ -30,7 +46,24 @@
       .pane h3 { margin:0 0 8px; font-size:14px; color:var(--muted); }
       .text { white-space: pre-wrap; line-height:1.8; font-size:15px; }
       .empty { color:var(--muted); padding:12px; }
+
+      /* 手机双语 Tab 切换 */
+      .lang-tabs { display:none; margin-top:12px; border:1px solid var(--line); border-radius:10px; overflow:hidden; background:#f9f5ee; }
+      .lang-tab { flex:1; padding:10px; font-size:14px; font-weight:600; cursor:pointer; border:none; background:transparent; color:var(--muted); min-height:44px; }
+      .lang-tab.active { background:var(--card); color:var(--ink); border-bottom:2px solid var(--accent); }
+
       @media (max-width: 920px) { .grid { grid-template-columns: 1fr; } }
+
+      @media (max-width: 767px) {
+        .page { padding: 12px 10px 28px; }
+        h1 { font-size: clamp(18px, 5vw, 24px); }
+        .text { font-size:16px; line-height:1.85; }
+        .lang-tabs { display:flex; }
+        .grid { display:block; }
+        /* In bilingual mode on mobile, tabs control visibility */
+        .pane-en, .pane-zh { display:none; }
+        .pane-en.visible, .pane-zh.visible { display:block; }
+      }
     </style>
   </head>
   <body>
@@ -55,6 +88,11 @@
           </div>
         </div>
         <div class="summary" id="summary"></div>
+        <!-- 手机端双语切换 Tab（桌面隐藏） -->
+        <div class="lang-tabs" id="langTabs">
+          <button class="lang-tab active" id="tabZh" type="button">中文</button>
+          <button class="lang-tab" id="tabEn" type="button">English</button>
+        </div>
         <div id="contentArea"></div>
       </div>
     </div>
@@ -79,6 +117,9 @@
       const sourceLinkEl = document.getElementById('sourceLink');
       const modeZhEl = document.getElementById('modeZh');
       const modeBiEl = document.getElementById('modeBi');
+      const tabZhEl = document.getElementById('tabZh');
+      const tabEnEl = document.getElementById('tabEn');
+      let mobileLang = 'zh'; // 'zh' or 'en'
 
       function esc(s) {
         return (s || '').replace(/[&<>"]/g, (c) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
@@ -112,13 +153,19 @@
         modeZhEl.classList.toggle('active', mode === 'zh');
         modeBiEl.classList.toggle('active', mode === 'bilingual');
 
+        const isMobile = window.innerWidth <= 767;
+        tabZhEl.classList.toggle('active', mobileLang === 'zh');
+        tabEnEl.classList.toggle('active', mobileLang === 'en');
+
         if (mode === 'zh') {
           contentAreaEl.innerHTML = `<div class="pane"><h3>中文正文</h3><div class="text">${esc(post.content_zh || post.zh_summary || '')}</div></div>`;
         } else {
+          const enVisible = !isMobile || mobileLang === 'en' ? ' visible' : '';
+          const zhVisible = !isMobile || mobileLang === 'zh' ? ' visible' : '';
           contentAreaEl.innerHTML = `
             <div class="grid">
-              <div class="pane"><h3>English</h3><div class="text">${esc(post.content_en || '')}</div></div>
-              <div class="pane"><h3>中文</h3><div class="text">${esc(post.content_zh || '')}</div></div>
+              <div class="pane pane-en${enVisible}"><h3>English</h3><div class="text">${esc(post.content_en || '')}</div></div>
+              <div class="pane pane-zh${zhVisible}"><h3>中文</h3><div class="text">${esc(post.content_zh || '')}</div></div>
             </div>
           `;
         }
@@ -141,6 +188,8 @@
 
       modeZhEl.addEventListener('click', () => { mode = 'zh'; render(); });
       modeBiEl.addEventListener('click', () => { mode = 'bilingual'; render(); });
+      tabZhEl.addEventListener('click', () => { mobileLang = 'zh'; render(); });
+      tabEnEl.addEventListener('click', () => { mobileLang = 'en'; render(); });
       manualApplyBtnEl.addEventListener('click', async () => {
         const text = manualTextEl.value.trim();
         if (!text) {

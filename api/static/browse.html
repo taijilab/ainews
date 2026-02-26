@@ -5,9 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Topic/Tag 文章列表</title>
     <style>
-      :root { --bg:#f6f1e8; --card:#fffdfa; --ink:#1f2a37; --muted:#576575; --line:#dccfb8; }
-      * { box-sizing: border-box; }
+      :root { --bg:#f6f1e8; --card:#fffdfa; --ink:#1f2a37; --muted:#576575; --line:#dccfb8; --accent:#b5522e; }
+      * { box-sizing: border-box; touch-action: manipulation; }
+      html { scroll-behavior: smooth; }
       body { margin:0; font-family:"Avenir Next","Manrope","IBM Plex Sans","PingFang SC",sans-serif; color:var(--ink); background:var(--bg); }
+
+      @media (prefers-color-scheme: dark) {
+        :root { --bg:#1a1a1a; --card:#242424; --ink:#e8e0d4; --muted:#9aa3ad; --line:#3a3530; --accent:#d4704a; }
+        .sum { color:#9aa3ad; }
+      }
+
       .page { max-width: 980px; margin: 0 auto; padding: 22px 16px 36px; }
       .card { border:1px solid var(--line); border-radius: 14px; background:var(--card); padding:14px; }
       h1 { margin:0; font-size: 26px; }
@@ -17,13 +24,21 @@
       .item:last-child { border-bottom:none; }
       .zh { margin:0 0 4px; font-size:15px; font-weight:700; }
       .zh a { color:var(--ink); text-decoration:none; }
-      .zh a:hover { color:#b5522e; }
+      .zh a:hover { color:var(--accent); }
       .en { margin:0 0 4px; font-size:13px; font-weight:500; }
       .en a { color:var(--ink); text-decoration:none; }
-      .en a:hover { color:#b5522e; }
+      .en a:hover { color:var(--accent); }
       .meta { margin-top:4px; color:var(--muted); font-size:12px; }
       .sum { margin-top:6px; font-size:13px; color:#3f4d5a; line-height:1.5; }
       .empty { color:var(--muted); padding:12px; }
+
+      @media (max-width: 767px) {
+        .page { padding: 14px 10px 28px; }
+        h1 { font-size: 20px; }
+        .zh { font-size: 16px; }
+        .sum { font-size: 14px; line-height: 1.6; }
+        .item { padding-bottom: 12px; }
+      }
     </style>
   </head>
   <body>

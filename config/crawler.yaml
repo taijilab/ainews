@@ -1,0 +1,25 @@
+version: 0.1
+
+fulltext:
+  enabled: true
+  min_fulltext_chars: 500        # 正文低于此长度时触发全文抓取
+  max_retries: 3                 # 最大重试次数
+  retry_base_delay: 1            # 指数退避基数（秒）
+  timeout: 12                    # HTTP 请求超时（秒）
+  user_agents:                   # 随机 UA 池，模拟正常浏览器
+    - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+    - "Mozilla/5.0 (X11; Linux x86_64; rv:122.0) Gecko/20100101 Firefox/122.0"
+    - "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1"
+  proxies: []                    # 代理列表，留空=直连，示例：
+                                 # - "http://proxy1.example.com:8080"
+                                 # - "http://proxy2.example.com:8080"
+                                 # - "socks5://127.0.0.1:9050"  # Tor
+
+playwright:
+  enabled: false                 # 是否启用 Playwright 无头浏览器（处理 JS 渲染页面）
+  js_domains_config: config/js_sites.yaml  # JS 渲染白名单域名配置
+
+rate_limiting:
+  per_domain_delay: 2            # 同一域名请求间隔（秒），避免频率限制
+  max_concurrent: 5              # 最大并发抓取数

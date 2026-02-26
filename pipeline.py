@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from crawler.fetcher import RawEntry, fetch_feed
+from crawler.fulltext import CrawlerConfig, fetch_fulltext
 from crawler.opml import parse_opml
 from db.store import PostRecord, Store
 from nlp.classifier import RuleClassifier
@@ -18,6 +19,7 @@ class PipelineConfig:
     db_path: str
     opml_path: str
     config_dir: str = "config"
+    crawler_config: str = "config/crawler.yaml"
 
 
 class DailyPipeline:
@@ -89,6 +91,38 @@ class DailyPipeline:
         return {
             "annotated": len(rows),
             "topic_bound": bound,
+        }
+
+    def run_fulltext_enrich(self, batch_size: int = 100) -> dict:
+        """Batch-enrich posts that have short content by fetching their full text."""
+        crawler_cfg = CrawlerConfig.from_yaml(self.cfg.crawler_config)
+        if not crawler_cfg.enabled:
+            return {"skipped": True, "reason": "fulltext disabled in config"}
+
+        rows = self.store.list_posts_needing_fulltext(
+            min_chars=crawler_cfg.min_fulltext_chars,
+            limit=batch_size,
+        )
+        enriched = 0
+        paywalled = 0
+        failed = 0
+        for row in rows:
+            url = str(row["url"])
+            result = fetch_fulltext(url, crawler_cfg)
+            if result.paywall_detected:
+                self.store.update_post_fulltext(int(row["id"]), result.text, "paywalled", True)
+                paywalled += 1
+            elif result.ok and result.text:
+                self.store.update_post_fulltext(int(row["id"]), result.text, "fetched_fulltext", False)
+                enriched += 1
+            else:
+                failed += 1
+
+        return {
+            "processed": len(rows),
+            "enriched": enriched,
+            "paywalled": paywalled,
+            "failed": failed,
         }
 
     def run_rankings(self) -> dict:
