@@ -125,10 +125,13 @@ class Store:
     def init_db(self) -> None:
         with self.connect() as conn:
             conn.executescript(SCHEMA_SQL)
-            # Backward-compatible schema extension for source management metadata.
+            # Backward-compatible schema extensions — each ALTER TABLE is idempotent.
             for sql in (
                 "ALTER TABLE feeds ADD COLUMN source_topic TEXT",
                 "ALTER TABLE feeds ADD COLUMN source_status TEXT",
+                # V2: full-text source tracking and paywall detection
+                "ALTER TABLE posts ADD COLUMN content_source TEXT",
+                "ALTER TABLE posts ADD COLUMN paywall_detected INTEGER DEFAULT 0",
             ):
                 try:
                     conn.execute(sql)
@@ -259,6 +262,35 @@ class Store:
                     )
                     continue
         return inserted
+
+    def list_posts_needing_fulltext(self, min_chars: int = 500, limit: int = 200) -> list[sqlite3.Row]:
+        """Return posts whose stored content is shorter than min_chars and not yet enriched."""
+        with self.connect() as conn:
+            return conn.execute(
+                """
+                SELECT id, url
+                FROM posts
+                WHERE (content_source IS NULL OR content_source = 'rss_summary')
+                  AND length(COALESCE(content, '')) < ?
+                  AND url IS NOT NULL AND url != ''
+                ORDER BY published_at DESC
+                LIMIT ?
+                """,
+                (min_chars, limit),
+            ).fetchall()
+
+    def update_post_fulltext(self, post_id: int, content: str, content_source: str, paywall_detected: bool) -> None:
+        with self.connect() as conn:
+            conn.execute(
+                """
+                UPDATE posts
+                SET content = ?,
+                    content_source = ?,
+                    paywall_detected = ?
+                WHERE id = ?
+                """,
+                (content, content_source, 1 if paywall_detected else 0, post_id),
+            )
 
     def add_labels(self, post_id: int, labels: list[dict]) -> None:
         with self.connect() as conn:

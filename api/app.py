@@ -17,6 +17,7 @@ import requests
 from db.store import Store
 from db.store import PostRecord
 from crawler.fetcher import fetch_feed
+from crawler.fulltext import CrawlerConfig, fetch_fulltext
 from processor.cleaner import canonicalize_url, normalize_text, stable_hash
 from nlp.classifier import RuleClassifier
 from nlp.entity_extractor import EntityExtractor
@@ -113,6 +114,20 @@ _post_bootstrap_attempted = False
 _classifier = None
 _entity_extractor = None
 _topic_builder = None
+_crawler_cfg: CrawlerConfig | None = None
+
+
+def _get_crawler_cfg() -> CrawlerConfig:
+    global _crawler_cfg
+    if _crawler_cfg is None:
+        base_dir = Path(__file__).resolve().parents[1]
+        cfg_path = base_dir / "config" / "crawler.yaml"
+        _crawler_cfg = CrawlerConfig.from_yaml(str(cfg_path))
+    return _crawler_cfg
+
+
+# Cache: url -> (text, method, paywall_detected)
+_fulltext_cache: dict[str, tuple[str, str, bool]] = {}
 
 
 def _ensure_nlp_components() -> None:
@@ -280,35 +295,23 @@ def _extract_paragraphs(text: str, max_paragraphs: int = 120) -> List[str]:
     return raw_parts[:max_paragraphs]
 
 
-@lru_cache(maxsize=512)
-def _fetch_article_text(url: str) -> str:
+def _fetch_article_result(url: str) -> tuple[str, str, bool]:
+    """Fetch full article text. Returns (text, method, paywall_detected). Results are cached."""
     if not url:
-        return ""
-    try:
-        resp = requests.get(
-            url,
-            timeout=6,
-            headers={"User-Agent": "ainews-bot/0.1 (+read-fulltext)"},
-            allow_redirects=True,
-        )
-        resp.raise_for_status()
-        html = resp.text or ""
-    except Exception:
-        return ""
+        return ("", "disabled", False)
+    if url in _fulltext_cache:
+        return _fulltext_cache[url]
+    cfg = _get_crawler_cfg()
+    result = fetch_fulltext(url, cfg)
+    entry = (result.text, result.method, result.paywall_detected)
+    if len(_fulltext_cache) < 512:
+        _fulltext_cache[url] = entry
+    return entry
 
-    # Remove non-content blocks first.
-    html = _SCRIPT_STYLE_RE.sub(" ", html)
-    # Prefer article/main section if available.
-    m = re.search(r"<article[^>]*>(.*?)</article>", html, re.IGNORECASE | re.DOTALL)
-    if not m:
-        m = re.search(r"<main[^>]*>(.*?)</main>", html, re.IGNORECASE | re.DOTALL)
-    body = m.group(1) if m else html
 
-    # Convert block tags to paragraph breaks then strip tags.
-    body = _BLOCK_BREAK_RE.sub("\n\n", body)
-    body = _HTML_TAG_RE.sub(" ", body)
-    body = re.sub(r"\s+", " ", body).strip()
-    return body
+def _fetch_article_text(url: str) -> str:
+    """Backward-compatible wrapper returning text only."""
+    return _fetch_article_result(url)[0]
 
 
 def _translate_long_to_zh(text: str, max_chars: int = 20000) -> str:
@@ -456,15 +459,19 @@ def api_post_detail(post_id: int) -> Dict:
     item["zh_summary"] = _translate_to_zh(item.get("summary", ""), limit=320)
     content = item.get("content") or ""
     source_type = "rss_content" if content else "rss_summary"
+    paywall = False
     if len((content or "").strip()) < 500:
         # RSS feeds often provide only summaries. Fetch full article on demand.
-        fetched = _fetch_article_text(item.get("url") or "")
-        if len(fetched) > len(content or ""):
-            content = fetched
+        fetched_text, fetched_method, paywall = _fetch_article_result(item.get("url") or "")
+        if paywall:
+            source_type = "paywalled"
+        elif len(fetched_text) > len(content or ""):
+            content = fetched_text
             source_type = "fetched_fulltext"
     if not content:
         content = item.get("summary") or ""
-        source_type = "rss_summary"
+        if source_type not in {"paywalled"}:
+            source_type = "rss_summary"
 
     paragraphs = _extract_paragraphs(content, max_paragraphs=220)
     if not paragraphs:
@@ -474,6 +481,7 @@ def api_post_detail(post_id: int) -> Dict:
     item["content_en"] = "\n\n".join(x["en"] for x in para_pairs)
     item["content_zh"] = "\n\n".join(x["zh"] for x in para_pairs)
     item["content_source"] = source_type
+    item["paywall_detected"] = paywall
     item["fulltext_available"] = source_type in {"fetched_fulltext", "rss_content"}
     return {"ok": True, "post": item}
 

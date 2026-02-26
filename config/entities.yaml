@@ -1,16 +1,11 @@
-version: 0.1
+version: 0.2
 entities:
+  # ── AI Serving & Inference ────────────────────────────────────────────────
   - id: ent.vllm
     canonical: vLLM
     type: Product
     aliases: [vllm, vLLM, paged attention, PagedAttention]
     trigger_keywords: [vllm, paged attention]
-
-  - id: ent.mcp
-    canonical: Model Context Protocol
-    type: Protocol
-    aliases: [mcp, model context protocol]
-    trigger_keywords: [mcp, model context protocol]
 
   - id: ent.sglang
     canonical: SGLang
@@ -18,14 +13,291 @@ entities:
     aliases: [sglang, sg-lang, sg lang]
     trigger_keywords: [sglang]
 
+  - id: ent.tensorrt_llm
+    canonical: TensorRT-LLM
+    type: Product
+    aliases: [tensorrt-llm, tensorrt llm, tensorrt_llm]
+    trigger_keywords: [tensorrt-llm, tensorrt llm]
+
+  - id: ent.ollama
+    canonical: Ollama
+    type: Product
+    aliases: [ollama]
+    trigger_keywords: [ollama]
+
+  - id: ent.llama_cpp
+    canonical: llama.cpp
+    type: Product
+    aliases: [llama.cpp, llama cpp, llamacpp, gguf, ggml]
+    trigger_keywords: [llama.cpp, gguf, ggml]
+
+  - id: ent.triton
+    canonical: Triton Inference Server
+    type: Product
+    aliases: [triton inference server, triton server, nvidia triton]
+    trigger_keywords: [triton inference server, triton server]
+
+  - id: ent.tgi
+    canonical: Text Generation Inference
+    type: Product
+    aliases: [tgi, text-generation-inference, text generation inference, huggingface tgi]
+    trigger_keywords: [tgi, text-generation-inference]
+
+  - id: ent.onnx_runtime
+    canonical: ONNX Runtime
+    type: Product
+    aliases: [onnx runtime, onnxruntime, ort, onnx]
+    trigger_keywords: [onnxruntime, onnx runtime]
+
+  - id: ent.ray_serve
+    canonical: Ray Serve
+    type: Product
+    aliases: [ray serve, rayserve, ray.serve]
+    trigger_keywords: [ray serve]
+
+  # ── AI Agent & Tool Use ───────────────────────────────────────────────────
+  - id: ent.mcp
+    canonical: Model Context Protocol
+    type: Protocol
+    aliases: [mcp, model context protocol]
+    trigger_keywords: [mcp, model context protocol]
+
+  - id: ent.langchain
+    canonical: LangChain
+    type: Product
+    aliases: [langchain, lang chain]
+    trigger_keywords: [langchain]
+
+  - id: ent.langgraph
+    canonical: LangGraph
+    type: Product
+    aliases: [langgraph, lang graph]
+    trigger_keywords: [langgraph]
+
+  - id: ent.llamaindex
+    canonical: LlamaIndex
+    type: Product
+    aliases: [llamaindex, llama index, llama-index, llamahub]
+    trigger_keywords: [llamaindex, llama index]
+
+  - id: ent.dify
+    canonical: Dify
+    type: Product
+    aliases: [dify, dify.ai]
+    trigger_keywords: [dify]
+
+  - id: ent.crewai
+    canonical: CrewAI
+    type: Product
+    aliases: [crewai, crew ai, crew.ai]
+    trigger_keywords: [crewai]
+
+  - id: ent.autogpt
+    canonical: AutoGPT
+    type: Product
+    aliases: [autogpt, auto-gpt, auto gpt]
+    trigger_keywords: [autogpt, auto-gpt]
+
+  # ── AI RAG & Vector Databases ─────────────────────────────────────────────
+  - id: ent.faiss
+    canonical: FAISS
+    type: Product
+    aliases: [faiss, facebook ai similarity search]
+    trigger_keywords: [faiss]
+
+  - id: ent.milvus
+    canonical: Milvus
+    type: Product
+    aliases: [milvus, zilliz]
+    trigger_keywords: [milvus]
+
+  - id: ent.qdrant
+    canonical: Qdrant
+    type: Product
+    aliases: [qdrant]
+    trigger_keywords: [qdrant]
+
+  - id: ent.chroma
+    canonical: ChromaDB
+    type: Product
+    aliases: [chroma, chromadb, chroma db]
+    trigger_keywords: [chromadb, chroma]
+
+  - id: ent.weaviate
+    canonical: Weaviate
+    type: Product
+    aliases: [weaviate]
+    trigger_keywords: [weaviate]
+
+  - id: ent.pinecone
+    canonical: Pinecone
+    type: Product
+    aliases: [pinecone]
+    trigger_keywords: [pinecone]
+
+  - id: ent.pgvector
+    canonical: pgvector
+    type: Product
+    aliases: [pgvector, pg vector, pg_vector]
+    trigger_keywords: [pgvector]
+
+  # ── AI Training & Finetune ────────────────────────────────────────────────
+  - id: ent.deepspeed
+    canonical: DeepSpeed
+    type: Product
+    aliases: [deepspeed, deep speed, microsoft deepspeed]
+    trigger_keywords: [deepspeed]
+
+  - id: ent.megatron
+    canonical: Megatron-LM
+    type: Product
+    aliases: [megatron, megatron-lm, megatron lm, nvidia megatron]
+    trigger_keywords: [megatron]
+
+  - id: ent.lora
+    canonical: LoRA
+    type: Technology
+    aliases: [lora, qlora, q-lora, peft, low-rank adaptation]
+    trigger_keywords: [lora, qlora, peft]
+
+  - id: ent.unsloth
+    canonical: Unsloth
+    type: Product
+    aliases: [unsloth]
+    trigger_keywords: [unsloth]
+
+  # ── AI Models ─────────────────────────────────────────────────────────────
+  - id: ent.llama
+    canonical: LLaMA
+    type: Model
+    aliases: [llama, llama2, llama3, llama-3, meta llama, llama 3]
+    trigger_keywords: [llama3, llama-3, meta llama]
+
+  - id: ent.deepseek
+    canonical: DeepSeek
+    type: Model
+    aliases: [deepseek, deep seek, deepseek-v3, deepseek-r1, deepseek r1, deepseek v3]
+    trigger_keywords: [deepseek]
+
+  - id: ent.qwen
+    canonical: Qwen
+    type: Model
+    aliases: [qwen, qwen2, qwen2.5, qwen-vl, tongyi, 通义千问]
+    trigger_keywords: [qwen, qwen2]
+
+  - id: ent.gemma
+    canonical: Gemma
+    type: Model
+    aliases: [gemma, gemma2, gemma 2, google gemma]
+    trigger_keywords: [gemma]
+
+  - id: ent.mistral
+    canonical: Mistral
+    type: Model
+    aliases: [mistral, mistral-7b, mixtral, mistral ai]
+    trigger_keywords: [mistral, mixtral]
+
+  # ── Databases ─────────────────────────────────────────────────────────────
   - id: ent.postgres
     canonical: PostgreSQL
     type: Database
     aliases: [postgres, postgresql, pg]
     trigger_keywords: [postgres, postgresql]
 
-  - id: ent.tensorrt_llm
-    canonical: TensorRT-LLM
-    type: Product
-    aliases: [tensorrt-llm, tensorrt llm]
-    trigger_keywords: [tensorrt-llm]
+  - id: ent.mysql
+    canonical: MySQL
+    type: Database
+    aliases: [mysql, mariadb, maria db]
+    trigger_keywords: [mysql, mariadb]
+
+  - id: ent.redis
+    canonical: Redis
+    type: Database
+    aliases: [redis, redis stack, dragonfly]
+    trigger_keywords: [redis]
+
+  - id: ent.mongodb
+    canonical: MongoDB
+    type: Database
+    aliases: [mongodb, mongo db, mongo]
+    trigger_keywords: [mongodb]
+
+  - id: ent.clickhouse
+    canonical: ClickHouse
+    type: Database
+    aliases: [clickhouse, click house]
+    trigger_keywords: [clickhouse]
+
+  - id: ent.duckdb
+    canonical: DuckDB
+    type: Database
+    aliases: [duckdb, duck db]
+    trigger_keywords: [duckdb]
+
+  - id: ent.elasticsearch
+    canonical: Elasticsearch
+    type: Database
+    aliases: [elasticsearch, elastic search, opensearch, open search, elastic]
+    trigger_keywords: [elasticsearch, opensearch]
+
+  - id: ent.sqlite
+    canonical: SQLite
+    type: Database
+    aliases: [sqlite, sqlite3]
+    trigger_keywords: [sqlite]
+
+  # ── GPU & Hardware ────────────────────────────────────────────────────────
+  - id: ent.cuda
+    canonical: CUDA
+    type: Technology
+    aliases: [cuda, cudnn, cuDNN, nvcc, cuda toolkit]
+    trigger_keywords: [cuda, cudnn]
+
+  - id: ent.rocm
+    canonical: ROCm
+    type: Technology
+    aliases: [rocm, amd rocm, hip, hipcuda]
+    trigger_keywords: [rocm]
+
+  - id: ent.h100
+    canonical: NVIDIA H100
+    type: Hardware
+    aliases: [h100, nvidia h100, hopper, gh200]
+    trigger_keywords: [h100, hopper]
+
+  - id: ent.b200
+    canonical: NVIDIA B200
+    type: Hardware
+    aliases: [b200, nvidia b200, blackwell, gb200, rtx 5090]
+    trigger_keywords: [b200, blackwell, gb200]
+
+  - id: ent.tpu
+    canonical: Google TPU
+    type: Hardware
+    aliases: [tpu, google tpu, tensor processing unit]
+    trigger_keywords: [tpu]
+
+  # ── Programming Languages / Runtimes ─────────────────────────────────────
+  - id: ent.golang
+    canonical: Go
+    type: Language
+    aliases: [golang, go lang, go programming]
+    trigger_keywords: [golang, goroutine, go runtime]
+
+  - id: ent.nodejs
+    canonical: Node.js
+    type: Runtime
+    aliases: [node.js, nodejs, node, deno, bun]
+    trigger_keywords: [nodejs, deno, bun]
+
+  - id: ent.typescript
+    canonical: TypeScript
+    type: Language
+    aliases: [typescript, type script]
+    trigger_keywords: [typescript]
+
+  - id: ent.python
+    canonical: Python
+    type: Language
+    aliases: [python, python3, cpython, pypy, uv, pip, poetry]
+    trigger_keywords: [cpython, pypy, uv package]

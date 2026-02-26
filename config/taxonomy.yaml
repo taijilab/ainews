@@ -1,4 +1,4 @@
-version: 0.1
+version: 0.2
 scoring:
   boost:
     strong: 1.2
@@ -9,58 +9,169 @@ scoring:
     secondary_label_min: 0.40
 
 labels:
+  # ── AI ────────────────────────────────────────────────────────────────────
   - id: AI.LLM
     name: AI / LLM & Reasoning
     parent: AI
-    keywords_strong: [mmlu, gsm8k, reasoning, rlhf, alignment]
-    keywords_medium: [prompt, eval, benchmark, hallucination, safety]
+    keywords_strong: [mmlu, gsm8k, reasoning, rlhf, alignment, chain-of-thought, cot, o1, o3]
+    keywords_medium: [prompt, eval, benchmark, hallucination, safety, instruction tuning, sycophancy]
     keywords_weak: [llm, model, transformer]
 
   - id: AI.AGENT
     name: AI / Agent & Tool Use
     parent: AI
-    keywords_strong: [mcp, model context protocol, tool calling, function calling, langgraph]
-    keywords_medium: [workflow, orchestration, planner, executor, reflection]
-    keywords_weak: [agent, agents, automation]
+    keywords_strong: [mcp, model context protocol, tool calling, function calling, langgraph, agentic, multi-agent]
+    keywords_medium: [workflow, orchestration, planner, executor, reflection, langchain, llamaindex, crewai, dify]
+    keywords_weak: [agent, agents, automation, copilot]
 
   - id: AI.RAG
     name: AI / RAG & Search
     parent: AI
-    keywords_strong: [rag, retrieval augmented generation, reranker, hybrid search]
-    keywords_medium: [vector database, embedding, retriever, chunking]
-    keywords_weak: [search, retrieval]
+    keywords_strong: [rag, retrieval augmented generation, reranker, hybrid search, pgvector]
+    keywords_medium: [vector database, embedding, retriever, chunking, faiss, milvus, qdrant, weaviate, chroma, pinecone]
+    keywords_weak: [search, retrieval, knowledge base]
 
   - id: AI.SERVING
     name: AI / Serving & Inference
     parent: AI
-    keywords_strong: [vllm, sglang, tensorrt-llm, triton, llama.cpp, gguf]
-    keywords_medium: [kv cache, paged attention, speculative decoding, quantization, flashattention]
+    keywords_strong: [vllm, sglang, tensorrt-llm, triton, llama.cpp, gguf, ollama, tgi, onnxruntime]
+    keywords_medium: [kv cache, paged attention, speculative decoding, quantization, flashattention, int8, fp8, bf16, prefill, decode]
     keywords_weak: [inference, serving, deploy, latency, throughput]
 
+  - id: AI.TRAINING
+    name: AI / Training & Finetune
+    parent: AI
+    keywords_strong: [sft, dpo, rlhf, ppo, lora, qlora, peft, fsdp, deepspeed, megatron, distillation]
+    keywords_medium: [finetune, fine-tune, gradient checkpointing, mixed precision, accelerate, unsloth, pretraining, alignment]
+    keywords_weak: [training, train, loss, optimizer]
+
+  - id: AI.MULTIMODAL
+    name: AI / Multimodal
+    parent: AI
+    keywords_strong: [vlm, vision language model, multimodal llm, clip, image generation, diffusion model, stable diffusion]
+    keywords_medium: [visual question answering, image captioning, text-to-image, text-to-video, speech recognition, whisper, tts]
+    keywords_weak: [multimodal, vision, image, audio, video]
+
+  - id: AI.INFRA
+    name: AI / Infra & MLOps
+    parent: AI
+    keywords_strong: [mlflow, wandb, weights and biases, kubeflow, ray, mlops, feature store]
+    keywords_medium: [experiment tracking, model registry, data pipeline, feature engineering, model monitoring, drift detection]
+    keywords_weak: [ml platform, model serving, pipeline]
+
+  # ── System / Infra ────────────────────────────────────────────────────────
   - id: SYS.K8S
     name: System / Cloud & K8s
     parent: System
-    keywords_strong: [kubernetes, k8s, helm, istio, envoy]
-    keywords_medium: [ingress, service mesh, containerd, cni, sidecar]
-    keywords_weak: [container, cloud, cluster]
+    keywords_strong: [kubernetes, k8s, helm, istio, envoy, karpenter, argo]
+    keywords_medium: [ingress, service mesh, containerd, cni, sidecar, operator, crd, pod]
+    keywords_weak: [container, cloud, cluster, docker]
 
+  - id: SYS.DISTRIB
+    name: System / Distributed Systems
+    parent: System
+    keywords_strong: [raft, paxos, consensus, distributed transaction, kafka, rabbitmq, pulsar, nats]
+    keywords_medium: [eventual consistency, cap theorem, saga, two-phase commit, message queue, pub-sub, zookeeper]
+    keywords_weak: [distributed, replication, fault tolerance, partition]
+
+  - id: SYS.NET
+    name: System / Networking
+    parent: System
+    keywords_strong: [quic, ebpf, dpdk, http3, tcp congestion, cdn, anycast]
+    keywords_medium: [load balancer, nginx, haproxy, nat, tls, mtls, dns, bgp]
+    keywords_weak: [network, latency, bandwidth, packet, protocol]
+
+  - id: SYS.OS
+    name: System / OS & Kernel
+    parent: System
+    keywords_strong: [linux kernel, syscall, ebpf, io_uring, cgroup, namespace, seccomp]
+    keywords_medium: [scheduler, memory allocator, page fault, context switch, interrupt, cpu affinity]
+    keywords_weak: [kernel, os, linux, process, thread]
+
+  - id: SYS.OBS
+    name: System / Observability
+    parent: System
+    keywords_strong: [opentelemetry, jaeger, zipkin, prometheus, grafana, otel]
+    keywords_medium: [tracing, span, distributed trace, metrics, alerting, log aggregation, loki, datadog]
+    keywords_weak: [observability, monitoring, logging, dashboard, alert]
+
+  # ── Data ──────────────────────────────────────────────────────────────────
   - id: DATA.DB
     name: Data / Database
     parent: Data
-    keywords_strong: [postgresql, postgres, mysql, clickhouse, duckdb, redis]
-    keywords_medium: [olap, index, query planner, mvcc, replication]
+    keywords_strong: [postgresql, postgres, mysql, clickhouse, duckdb, redis, iceberg, delta lake]
+    keywords_medium: [olap, index, query planner, mvcc, replication, mongodb, elasticsearch, sqlite]
     keywords_weak: [database, sql, storage]
 
+  - id: DATA.ENG
+    name: Data / Data Engineering
+    parent: Data
+    keywords_strong: [apache spark, flink, dbt, airflow, data lakehouse, iceberg, delta lake, hudi]
+    keywords_medium: [etl, data pipeline, streaming, batch processing, data catalog, schema registry, parquet, orc]
+    keywords_weak: [data engineering, pipeline, warehouse, lake]
+
+  - id: DATA.ANALYTICS
+    name: Data / Analytics & BI
+    parent: Data
+    keywords_strong: [a/b test, experimentation platform, metric store, superset, metabase, looker]
+    keywords_medium: [funnel analysis, cohort, retention, conversion, data product, self-serve analytics]
+    keywords_weak: [analytics, bi, dashboard, report, kpi]
+
+  # ── Security ──────────────────────────────────────────────────────────────
   - id: SEC.CVE
     name: Security / Vulnerability & CVE
     parent: Security
-    keywords_strong: [cve-, zero-day, rce, sandbox escape]
-    keywords_medium: [xss, sqli, csrf, exploit, poc]
-    keywords_weak: [security, vulnerability]
+    keywords_strong: [cve-, zero-day, rce, sandbox escape, log4j, openssl, supply chain attack]
+    keywords_medium: [xss, sqli, csrf, exploit, poc, patch, advisory]
+    keywords_weak: [security, vulnerability, attack]
 
+  - id: SEC.APPSEC
+    name: Security / AppSec & Supply Chain
+    parent: Security
+    keywords_strong: [sbom, sigstore, software bill of materials, dependency confusion, typosquatting]
+    keywords_medium: [sast, dast, secret scanning, dependency scanning, code signing, slsa, ossf]
+    keywords_weak: [appsec, supply chain, dependency, package security]
+
+  - id: SEC.PRIVACY
+    name: Security / Privacy & Compliance
+    parent: Security
+    keywords_strong: [gdpr, ccpa, differential privacy, anonymization, data residency]
+    keywords_medium: [pii, data retention, right to erasure, consent management, compliance, audit log]
+    keywords_weak: [privacy, compliance, regulation]
+
+  # ── Programming ───────────────────────────────────────────────────────────
   - id: PROG.RUST
     name: Programming / Rust
     parent: Programming
-    keywords_strong: [borrow checker, cargo, tokio, wasm]
-    keywords_medium: [lifetime, trait, async, serde]
+    keywords_strong: [borrow checker, cargo, tokio, wasm, async rust]
+    keywords_medium: [lifetime, trait, async, serde, rayon, axum]
     keywords_weak: [rust]
+
+  - id: PROG.LANG
+    name: Programming / Languages
+    parent: Programming
+    keywords_strong: [golang, goroutine, typescript, kotlin, swift, zig, carbon]
+    keywords_medium: [python 3, cpython, pypy, jvm, jit compiler, garbage collector, node.js, deno, bun]
+    keywords_weak: [programming language, runtime, compiler]
+
+  - id: PROG.DEVTOOLS
+    name: Programming / DevTools & CI
+    parent: Programming
+    keywords_strong: [github actions, gitlab ci, bazel, nx, turborepo, devcontainer]
+    keywords_medium: [ci/cd, linter, formatter, pre-commit, docker compose, makefile, monorepo]
+    keywords_weak: [devtools, ide, cli, git, ci, cd, build]
+
+  - id: PROG.PERF
+    name: Programming / Performance
+    parent: Programming
+    keywords_strong: [flamegraph, perf, profiler, memory leak, cache miss, simd, avx]
+    keywords_medium: [benchmark, microbenchmark, latency p99, throughput, lock contention, cpu bound, io bound]
+    keywords_weak: [performance, optimization, fast, slow]
+
+  # ── Hardware ──────────────────────────────────────────────────────────────
+  - id: HW.GPU
+    name: Hardware / GPU & Accelerators
+    parent: Hardware
+    keywords_strong: [cuda, cudnn, nvidia, h100, b200, blackwell, hopper, rocm, amd gpu, tpu, ascend, cann]
+    keywords_medium: [mi300, mi350, gb200, intel gaudi, gpu memory, hbm, nvlink, nccl, rdma]
+    keywords_weak: [gpu, accelerator, chip, compute]
